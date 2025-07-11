@@ -36,30 +36,25 @@ public class BusPositionController {
     public ResponseEntity<?> updatePosition(@PathVariable Long busId,
                                             @RequestBody BusPosition busPosition) {
         try {
-            long time = busPosition.getTime(); // retrieved from body
+            long time = busPosition.getTimestamp(); // from deserialized JSON
 
-            // Build composite ID
             BusPositionId id = new BusPositionId(busId, time);
-
-            // Check if the entry already exists (prevent duplicates)
             if (busPosRepo.existsById(id)) {
                 return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body("Position already exists for busId = " + busId + " and time = " + time);
+                        .body("Position already exists");
             }
-
-            // Set composite ID
             busPosition.setId(id);
             busPosition.setBus(busService.getBus(busId));
             busPosition.setSavedAt(Instant.now());
+
             busPosRepo.save(busPosition);
-
             return ResponseEntity.status(HttpStatus.CREATED).body("Position saved successfully");
-
         } catch (Exception ex) {
             ex.printStackTrace();
-            return ResponseEntity.status(500).body("Internal server error: " + ex.getMessage());
+            return ResponseEntity.status(500).body("Error: " + ex.getMessage());
         }
     }
+
 
 
 

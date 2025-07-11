@@ -1,5 +1,6 @@
 package com.example.Transport.Entities;
 
+import com.example.Transport.Config.BusPositionDeserializer;
 import com.example.Transport.Config.PointDeserializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,9 +25,11 @@ import java.time.Instant;
         },
         uniqueConstraints = @UniqueConstraint(columnNames = {"time", "bus_id"})
 )
+@JsonDeserialize(using = BusPositionDeserializer.class)
 public class BusPosition {
 
     @EmbeddedId
+    @JsonIgnore
     private BusPositionId id;
 
     //@JsonDeserialize(using = PointDeserializer.class)
@@ -45,11 +48,20 @@ public class BusPosition {
         return this.position.getX(); // X = longitude
     }
 
+    @JsonProperty("busId")
+    public Long getBusId() {
+        return id != null ? id.getBusId() : null;
+    }
+
+    @JsonProperty("time")
+    public Long getTimestamp() {
+        return id != null ? id.getTime() : null;
+    }
+
 
     //Access `time` from the embedded ID, or map it read-only if needed:
-    @JsonIgnore
+    //@JsonIgnore
     @Column(name = "time", insertable = false, updatable = false)
-
     private long time;
 
     private Instant savedAt;
