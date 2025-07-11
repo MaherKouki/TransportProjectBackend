@@ -7,6 +7,7 @@ import com.example.Transport.Repositories.BusPositionRepository;
 import com.example.Transport.Service.BusPositionService;
 import com.example.Transport.Service.BusService;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Position;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import org.locationtech.jts.geom.Point;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -27,34 +30,8 @@ public class BusPositionController {
     private final BusService busService;
 
 
-    //http://localhost:8080/bus/position/1
-    /*@PostMapping("/position/{busId}")
-    public ResponseEntity<?> updatePosition(@PathVariable Long busId,
-                                            @RequestBody BusPosition busPosition) {
-        try {
-            long time = busPosition.getTime();
-            BusPositionId id = new BusPositionId(busId, time);
 
-            if (busPosRepo.existsById(id) {
-                return ResponseEntity.status(HttpStatus.CONFLICT)
-                        .body("Position already exists for busId=" + busId + " and time=" + time);
-            }
-
-            busPosition.setId(id);
-            busPosition.setBus(busService.getBus(busId));
-            busPosition.setSavedAt(Instant.now());
-
-            busPosRepo.save(busPosition);
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return ResponseEntity.status(500).body("Internal server error: " + ex.getMessage());
-        }
-    }*/
-
-
-
+    //http://localhost:8080/bus/position/2
     @PostMapping("/position/{busId}")
     public ResponseEntity<?> updatePosition(@PathVariable Long busId,
                                             @RequestBody BusPosition busPosition) {
@@ -87,13 +64,31 @@ public class BusPositionController {
 
 
 
+    /*@GetMapping("/lastPosition/{idBus}")
+    public ResponseEntity<?> getLastPosition(@PathVariable Long idBus) {
+
+        if (!busPosRepo.existsById_BusId(idBus)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Bus " + idBus + " does not exits ");
+        }
+        BusPosition position = busPosRepo.findLastPosition(idBus).get(0);
+        return ResponseEntity.ok(position);
+    }*/
+
+    @GetMapping("/lastPosition/{idBus}")
+    public ResponseEntity<Object> getLastPosition(@PathVariable Long idBus) {
+        if (!busPosRepo.existsById_BusId(idBus)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Bus " + idBus + " does not exit ");
+        }
+        BusPosition position = busPosRepo.findTopByBus_IdBusOrderById_TimeDesc(idBus);
+        return ResponseEntity.ok(position);
+    }
 
 
 
 
-//        return repository.findByEmail(userEmail)
-//                .orElseThrow(() -> new UsernameNotFoundException("User Email not found"));
-//    }
+
 
     @GetMapping( "/getPositionPerBus/{busId}")
     public List<BusPosition> getPositionPerBus(@PathVariable Long busId) {

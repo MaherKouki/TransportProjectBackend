@@ -1,9 +1,10 @@
 package com.example.Transport.Config;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import jakarta.annotation.PostConstruct;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
@@ -23,4 +24,37 @@ public class PointDeserializer extends JsonDeserializer<Point> {
 
         return geometryFactory.createPoint(new Coordinate(lon, lat));
     }
+
+
+
+
+    public static class PointSerializer extends JsonSerializer<Point> {
+        @Override
+        public void serialize(Point value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+            gen.writeStartObject();
+            gen.writeNumberField("latitude", value.getY());   // Y = latitude
+            gen.writeNumberField("longitude", value.getX());  // X = longitude
+            gen.writeEndObject();
+        }
+    }
+
+    // Register serializer and deserializer
+    private final ObjectMapper objectMapper;
+
+    public PointDeserializer(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
+    @PostConstruct
+    public void setupModule() {
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(Point.class, this);
+        module.addSerializer(Point.class, new PointSerializer());
+        objectMapper.registerModule(module);
+    }
+
+
+
+
+
 }
