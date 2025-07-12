@@ -23,6 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/busPosition")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")  // autorise uniquement Angular local
 public class BusPositionController {
 
     private final BusPositionService positionService;
