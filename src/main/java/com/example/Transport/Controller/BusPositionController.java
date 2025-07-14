@@ -49,7 +49,7 @@ public class BusPositionController {
             busPosition.setSavedAt(Instant.now());
 
             busPosRepo.save(busPosition);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Position saved successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body("Position saved successssfully");
         } catch (Exception ex) {
             ex.printStackTrace();
             return ResponseEntity.status(500).body("Error: " + ex.getMessage());
