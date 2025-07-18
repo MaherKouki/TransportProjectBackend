@@ -11,7 +11,7 @@ public class Stop {
 
 
     @Id
-    private int id;
+    private int idStop;
 
     private String stopName;
 
