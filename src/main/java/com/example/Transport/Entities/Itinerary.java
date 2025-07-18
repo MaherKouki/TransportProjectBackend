@@ -1,11 +1,9 @@
 package com.example.Transport.Entities;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -14,6 +12,7 @@ public class Itinerary {
 
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idItinerary;
 
     private String departName;
@@ -28,5 +27,5 @@ public class Itinerary {
 
 
     @OneToMany (mappedBy = "itinerary")
-    private List<Stop> stop;
+    private List<Stop> stop = new ArrayList<>()  ;
 }
