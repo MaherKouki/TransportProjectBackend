@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -30,10 +31,6 @@ public class Itinerary {
     private double destinationAltitude;
     private double destinationLongitude;
 */
-
-    @OneToMany (mappedBy = "itinerary")
-    private List<Stop> stop = new ArrayList<>()  ;
-
 
 
 

@@ -1,10 +1,11 @@
 package com.example.Transport.Entities;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 
 @Entity
-
+@Data
 public class Stop {
 
 
