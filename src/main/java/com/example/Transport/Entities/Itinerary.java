@@ -21,6 +21,17 @@ public class Itinerary {
     private String itineraryName;
     private LocalTime startTime;
 
+    @OneToMany (mappedBy = "itinerary")
+    private List<Stop> stop = new ArrayList<>()  ;
+
+
+    public Stop getDeparture() {
+        return stop.stream().min(Comparator.comparing(Stop::getOrderIndex)).orElse(null);
+    }
+
+    public Stop getDestination() {
+        return stop.stream().max(Comparator.comparing(Stop::getOrderIndex)).orElse(null);
+    }
 
 /*
     private String departName;
@@ -31,7 +42,5 @@ public class Itinerary {
     private double destinationAltitude;
     private double destinationLongitude;
 */
-
-
 
 }

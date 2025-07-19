@@ -3,6 +3,8 @@ package com.example.Transport.Entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalTime;
+
 
 @Entity
 @Data
@@ -17,6 +19,14 @@ public class Stop {
     private double latitude;
     private double longitude;
 
+    //Updatable hedhi
+    private LocalTime estimatedTime;
+
+    private LocalTime arrivalTime;
+
+
+
+    @Column(unique = true)
     private int orderIndex;
 
     @ManyToOne
