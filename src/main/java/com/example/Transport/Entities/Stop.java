@@ -21,10 +21,7 @@ public class Stop {
 
     //Updatable hedhi
     private LocalTime estimatedTime;
-
     private LocalTime arrivalTime;
-
-
 
     @Column(unique = true)
     private int orderIndex;

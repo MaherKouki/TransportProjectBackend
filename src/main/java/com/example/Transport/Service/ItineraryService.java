@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ItineraryService {
 
-    /*public Itinerary addItinerary(Itinerary itinerary) {
+    /*public Itinerary createItinerary(Itinerary itinerary) {
 
     }*/
 }
