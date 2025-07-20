@@ -33,6 +33,13 @@ public class Itinerary {
         return stop.stream().max(Comparator.comparing(Stop::getOrderIndex)).orElse(null);
     }
 
+    public String nameOfItinerary(Itinerary itinerary) {
+        String departure = itinerary.getDeparture().getStopName();
+        String destination = itinerary.getDestination().getStopName();
+        return departure + " " + destination;
+
+    }
+
 /*
     private String departName;
     private double departAltitude;
