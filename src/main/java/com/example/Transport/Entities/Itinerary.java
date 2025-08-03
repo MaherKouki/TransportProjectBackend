@@ -25,6 +25,10 @@ public class Itinerary {
     private List<Stop> stop = new ArrayList<>()  ;
 
 
+    //continue
+    //private Stop departure;
+
+
     public Stop getDeparture() {
         return stop.stream().min(Comparator.comparing(Stop::getOrderIndex)).orElse(null);
     }
