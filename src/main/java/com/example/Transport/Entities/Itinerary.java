@@ -22,7 +22,13 @@ public class Itinerary {
     private LocalTime startTime;
 
     @ManyToMany (mappedBy = "itinerary")
-    private List<Stop> stop = new ArrayList<>()  ;
+    private List<Stop> stop = new ArrayList<>();
+
+    @ManyToOne
+    private Stop departure ;
+
+    @ManyToOne
+    private Stop destiation;
 
 
     //continue
