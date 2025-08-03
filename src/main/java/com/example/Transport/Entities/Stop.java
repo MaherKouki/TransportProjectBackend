@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalTime;
+import java.util.Set;
 
 
 @Entity
@@ -26,8 +27,11 @@ public class Stop {
     @Column(unique = true)
     private int orderIndex;
 
-    @ManyToOne
-    private Itinerary itinerary;
+    /*@ManyToOne
+    private Itinerary itinerary;*/
+
+    @ManyToMany
+    private Set<Itinerary> itinerary;
 
 
 

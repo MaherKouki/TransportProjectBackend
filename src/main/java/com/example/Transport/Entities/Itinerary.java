@@ -21,7 +21,7 @@ public class Itinerary {
     private String itineraryName;
     private LocalTime startTime;
 
-    @OneToMany (mappedBy = "itinerary")
+    @ManyToMany (mappedBy = "itinerary")
     private List<Stop> stop = new ArrayList<>()  ;
 
 
