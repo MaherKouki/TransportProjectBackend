@@ -15,10 +15,6 @@ public class ItineraryService {
 
     ItineraryRepo itineraryRepo;
 
-
-
-
-
     public Itinerary createItinerary(List<Stop> stops) {
 
         Itinerary it = new Itinerary();
