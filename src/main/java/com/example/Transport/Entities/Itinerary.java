@@ -2,6 +2,7 @@ package com.example.Transport.Entities;
 
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 
 @Entity
+@Data
 public class Itinerary {
 
 
@@ -28,26 +30,25 @@ public class Itinerary {
     private Stop departure ;
 
     @ManyToOne
-    private Stop destiation;
+    private Stop destination;
 
 
     //continue
     //private Stop departure;
 
-
+/*
     public Stop getDeparture() {
         return stop.stream().min(Comparator.comparing(Stop::getOrderIndex)).orElse(null);
     }
 
     public Stop getDestination() {
         return stop.stream().max(Comparator.comparing(Stop::getOrderIndex)).orElse(null);
-    }
+    }*/
 
     public String nameOfItinerary(Itinerary itinerary) {
-        String departure = itinerary.getDeparture().getStopName();
-        String destination = itinerary.getDestination().getStopName();
+        String departure = itinerary.departure.getStopName();
+        String destination = itinerary.destination.getStopName();
         return departure + " " + destination;
-
     }
 
 /*
