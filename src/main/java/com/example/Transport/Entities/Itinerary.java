@@ -45,11 +45,11 @@ public class Itinerary {
         return stop.stream().max(Comparator.comparing(Stop::getOrderIndex)).orElse(null);
     }*/
 
-    public String nameOfItinerary(Itinerary itinerary) {
+    /*public String nameOfItinerary(Itinerary itinerary) {
         String departure = itinerary.departure.getStopName();
         String destination = itinerary.destination.getStopName();
         return departure + " " + destination;
-    }
+    }*/
 
 
 

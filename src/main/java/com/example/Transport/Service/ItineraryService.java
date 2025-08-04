@@ -22,7 +22,6 @@ public class ItineraryService {
     public Itinerary createItinerary(List<Stop> stops) {
 
         Itinerary it = new Itinerary();
-
         it.setDeparture(stops.get(0));
         it.setDestination(stops.get(1));
         it.setItineraryName(stops.get(0).getStopName() + " " + stops.get(1).getStopName());
