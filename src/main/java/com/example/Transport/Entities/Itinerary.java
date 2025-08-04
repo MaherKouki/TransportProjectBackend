@@ -51,6 +51,9 @@ public class Itinerary {
         return departure + " " + destination;
     }
 
+
+
+
 /*
     private String departName;
     private double departAltitude;
