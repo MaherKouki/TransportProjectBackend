@@ -1,5 +1,6 @@
 package com.example.Transport.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -30,11 +31,10 @@ public class Stop {
     /*@ManyToOne
     private Itinerary itinerary;*/
 
+
+    @JsonIgnore
     @ManyToMany
     private Set<Itinerary> itinerary;
-
-
-
 
 
 }
