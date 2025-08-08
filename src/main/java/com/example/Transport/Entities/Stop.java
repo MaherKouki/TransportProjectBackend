@@ -1,5 +1,6 @@
 package com.example.Transport.Entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -22,7 +23,9 @@ public class Stop {
     private double longitude;
 
     //Updatable hedhi
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime estimatedTime;
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime arrivalTime;
 
     @Column(unique = true)

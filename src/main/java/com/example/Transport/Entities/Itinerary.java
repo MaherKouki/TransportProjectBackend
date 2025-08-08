@@ -1,6 +1,7 @@
 package com.example.Transport.Entities;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -22,6 +23,8 @@ public class Itinerary {
 
 
     private String itineraryName;
+
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime startTime;
 
 
@@ -29,10 +32,10 @@ public class Itinerary {
     @ManyToMany (mappedBy = "itinerary")
     private List<Stop> stop = new ArrayList<>();
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Stop departure ;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Stop destination;
 
 
