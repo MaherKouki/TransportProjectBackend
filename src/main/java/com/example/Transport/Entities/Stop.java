@@ -25,10 +25,11 @@ public class Stop {
     //Updatable hedhi
     @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime estimatedTime;
+
     @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime arrivalTime;
 
-    @Column(unique = true)
+    //@Column(unique = true)
     private int orderIndex;
 
     /*@ManyToOne
