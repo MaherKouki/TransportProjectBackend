@@ -28,6 +28,7 @@ public class Itinerary {
     private LocalTime startTime;
 
 
+
     @JsonIgnore
     @ManyToMany (mappedBy = "itinerary")
     private List<Stop> stop = new ArrayList<>();
