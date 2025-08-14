@@ -69,7 +69,99 @@ public class ItineraryService {
     private final ItineraryRepo itineraryRepo;
     private final StopRepo stopRepo;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
     @Transactional
+    public Itinerary createItineraryFromStops(List<Stop> stops) {
+        if (stops == null || stops.size() < 2) {
+            throw new IllegalArgumentException("At least two stops (departure and destination) are required.");
+        }
+
+        // Ensure orderIndex is set properly to avoid DB constraint issues
+        for (int i = 0; i < stops.size(); i++) {
+            stops.get(i).setOrderIndex(i);
+        }
+
+        // Save stops
+        List<Stop> savedStops = stopRepo.saveAll(stops);
+
+        // Create itinerary
+        Stop departure = savedStops.get(0);
+        Stop destination = savedStops.get(savedStops.size() - 1);
+
+        Itinerary itinerary = new Itinerary();
+        itinerary.setItineraryName(departure.getStopName() + " - " + destination.getStopName());
+        itinerary.setStartTime(null);
+        itinerary.setDeparture(departure);
+        itinerary.setDestination(destination);
+        itinerary.setStop(new ArrayList<>(savedStops));
+
+        // Save itinerary
+        Itinerary savedItinerary = itineraryRepo.save(itinerary);
+
+        // Update relationship in each stop
+        for (Stop s : savedStops) {
+            s.getItinerary().add(savedItinerary);
+        }
+        stopRepo.saveAll(savedStops);
+
+        return savedItinerary;
+    }
+
+
+    public Itinerary createItineraryFromMarkers(Stop departure, Stop destination) {
+
+        if (departure == null || destination == null) {
+            throw new IllegalArgumentException("Both departure and destination stops are required.");
+        }
+
+        // Set order indexes
+        departure.setOrderIndex(null);
+        destination.setOrderIndex(null);
+
+        // Save stops first
+        Stop savedDeparture = stopRepo.save(departure);
+        Stop savedDestination = stopRepo.save(destination);
+
+        // Create itinerary
+        Itinerary itinerary = new Itinerary();
+        itinerary.setItineraryName(savedDeparture.getStopName() + " - " + savedDestination.getStopName());
+        itinerary.setStartTime(savedDeparture.getArrivalTime());
+        itinerary.setDeparture(savedDeparture);
+        itinerary.setDestination(savedDestination);
+
+        // Initialize stop list
+        List<Stop> stops = new ArrayList<>();
+        stops.add(savedDeparture);
+        stops.add(savedDestination);
+        itinerary.setStop(stops);
+
+        // Save itinerary
+        Itinerary savedItinerary = itineraryRepo.save(itinerary);
+
+        // Update stops' many-to-many relation
+        savedDeparture.getItinerary().add(savedItinerary);
+        savedDestination.getItinerary().add(savedItinerary);
+
+        stopRepo.save(savedDeparture);
+        stopRepo.save(savedDestination);
+
+        return savedItinerary;
+    }
+
+
+    /*@Transactional
     public Itinerary createItineraryFromMarkers(Stop departure, Stop destination) {
         if (departure == null || destination == null) {
             throw new IllegalArgumentException("Both departure and destination stops are required.");
@@ -111,7 +203,7 @@ public class ItineraryService {
         stopRepo.save(savedDestination);
 
         return savedItinerary;
-    }
+    }*/
 
     public List<Itinerary> getAllItineraries() {
         return itineraryRepo.findAll();

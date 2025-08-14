@@ -30,7 +30,7 @@ public class Stop {
     private LocalTime arrivalTime;
 
     //@Column(unique = true)
-    private int orderIndex;
+    private Integer orderIndex;
 
     /*@ManyToOne
     private Itinerary itinerary;*/

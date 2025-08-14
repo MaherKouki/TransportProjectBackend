@@ -24,6 +24,7 @@ public class Itinerary {
 
     private String itineraryName;
 
+
     @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime startTime;
 
