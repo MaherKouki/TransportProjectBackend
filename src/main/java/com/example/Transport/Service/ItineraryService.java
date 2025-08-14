@@ -192,50 +192,6 @@ public class ItineraryService {
     }*/
 
 
-    /*@Transactional
-    public Itinerary createItineraryFromMarkers(Stop departure, Stop destination) {
-        if (departure == null || destination == null) {
-            throw new IllegalArgumentException("Both departure and destination stops are required.");
-        }
-
-        // Remove the unique constraint issue by setting unique orderIndex per itinerary
-        // For now, let's remove orderIndex from the individual stops since it causes conflicts
-        departure.setOrderIndex(0);
-        destination.setOrderIndex(1);
-
-        // Save stops first
-        Stop savedDeparture = stopRepo.save(departure);
-        Stop savedDestination = stopRepo.save(destination);
-
-        // Create itinerary
-        Itinerary itinerary = new Itinerary();
-        itinerary.setItineraryName(savedDeparture.getStopName() + " - " + savedDestination.getStopName());
-        itinerary.setStartTime(null);
-        itinerary.setDeparture(savedDeparture);
-        itinerary.setDestination(savedDestination);
-
-        // Initialize the stop list if null
-        if (itinerary.getStop() == null) {
-            itinerary.setStop(new ArrayList<>());
-        }
-
-        // Add stops to the itinerary
-        itinerary.getStop().add(savedDeparture);
-        itinerary.getStop().add(savedDestination);
-
-        // Save and return the itinerary
-        Itinerary savedItinerary = itineraryRepo.save(itinerary);
-
-        // Update the many-to-many relationship from the other side
-        savedDeparture.getItinerary().add(savedItinerary);
-        savedDestination.getItinerary().add(savedItinerary);
-
-        stopRepo.save(savedDeparture);
-        stopRepo.save(savedDestination);
-
-        return savedItinerary;
-    }*/
-
     public List<Itinerary> getAllItineraries() {
         return itineraryRepo.findAll();
     }
