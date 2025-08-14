@@ -71,6 +71,37 @@ public class ItineraryService {
 
 
 
+    @Transactional
+    public Itinerary createItineraryFromMarkers(Stop departure, Stop destination) {
+
+        if (departure == null || destination == null) {
+            throw new IllegalArgumentException("Both departure and destination stops are required.");
+        }
+
+        // Save stops
+        Stop savedDeparture = stopRepo.save(departure);
+        Stop savedDestination = stopRepo.save(destination);
+
+        // Create itinerary
+        Itinerary itinerary = new Itinerary();
+        itinerary.setItineraryName(savedDeparture.getStopName() + " - " + savedDestination.getStopName());
+        itinerary.setStartTime(savedDeparture.getArrivalTime());
+        itinerary.setDeparture(savedDeparture);
+        itinerary.setDestination(savedDestination);
+
+        // Add stops list (departure + destination)
+        List<Stop> stops = new ArrayList<>();
+        stops.add(savedDeparture);
+        stops.add(savedDestination);
+        itinerary.setStop(stops);
+
+        // Save itinerary
+        return itineraryRepo.save(itinerary);
+    }
+
+
+
+
 
 
 
@@ -119,7 +150,7 @@ public class ItineraryService {
         return savedItinerary;
     }
 
-
+/*
     public Itinerary createItineraryFromMarkers(Stop departure, Stop destination) {
 
         if (departure == null || destination == null) {
@@ -158,7 +189,7 @@ public class ItineraryService {
         stopRepo.save(savedDestination);
 
         return savedItinerary;
-    }
+    }*/
 
 
     /*@Transactional
