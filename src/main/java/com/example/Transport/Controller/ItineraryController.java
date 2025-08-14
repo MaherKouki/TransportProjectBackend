@@ -23,25 +23,6 @@ public class ItineraryController {
     private final ItineraryService itineraryService;
 
 
-//    @PostMapping("/create")
-//    public ResponseEntity<Itinerary> createItinerary(@RequestBody Stop departure, @RequestBody Stop destination) {
-//        Itinerary itinerary = itineraryService.createItineraryFromMarkers(departure, destination);
-//        return ResponseEntity.ok(itinerary);
-//    }
-
-
-    /*@PostMapping("/create")
-    public ResponseEntity<Itinerary> createItinerary(@RequestBody List<Stop> stops) {
-        try {
-            Itinerary itinerary = itineraryService.createItineraryFromStops(stops);
-            return ResponseEntity.ok(itinerary);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
-    }*/
-
 
     @PostMapping("/create")
     public ResponseEntity<Itinerary> createItinerary(@RequestBody Map<String, Stop> stops) {
