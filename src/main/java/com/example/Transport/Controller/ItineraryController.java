@@ -3,13 +3,11 @@ package com.example.Transport.Controller;
 
 import com.example.Transport.Entities.Itinerary;
 import com.example.Transport.Entities.Stop;
+import com.example.Transport.Repositories.ItineraryRepo;
 import com.example.Transport.Service.ItineraryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +19,7 @@ public class ItineraryController {
 
 
     private final ItineraryService itineraryService;
+    private final ItineraryRepo itineraryRepo;
 
 
 
@@ -43,6 +42,22 @@ public class ItineraryController {
             return ResponseEntity.status(500).build();
         }
     }
+
+    @GetMapping("/getItineraryByDeparture/{departurePoint}")
+    public ResponseEntity<List<Itinerary>> getItinerariesByDeparture(@PathVariable String derpaturePoint) {
+        List<Itinerary> itineraries = itineraryRepo.findByDeparture_StopNameContainingIgnoreCase(derpaturePoint).orElseThrow(()->new IllegalArgumentException("No itinerary found with that stop point"));
+        return ResponseEntity.ok(itineraries);
+    }
+
+    @GetMapping("/getItineraryByDestination/{destinationPoint}")
+    public ResponseEntity<List<Itinerary>> getItinerariesByDestination(@PathVariable String destinationPoint) {
+        List<Itinerary> itineraries = itineraryRepo.findByDestination_StopNameContainingIgnoreCase(destinationPoint).orElseThrow(()->new IllegalArgumentException("No itinerary found with that stop point"));
+        return ResponseEntity.ok(itineraries);
+    }
+
+
+
+
 
 }
 
