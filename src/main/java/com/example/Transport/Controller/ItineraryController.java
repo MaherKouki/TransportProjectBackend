@@ -66,6 +66,27 @@ public class ItineraryController {
 
 
 
+    @PostMapping("/{id}/add-stops")
+    public ResponseEntity<Void> addStops(
+            @PathVariable int id,
+            @RequestBody List<Stop> stops
+    ) {
+        try {
+            itineraryService.addStopsToItinerary(id, stops);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+
+
+
+
+
+
+
 
 
 

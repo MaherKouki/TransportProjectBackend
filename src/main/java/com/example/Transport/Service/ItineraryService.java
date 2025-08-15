@@ -59,8 +59,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -97,6 +99,42 @@ public class ItineraryService {
 
         // Save itinerary
         return itineraryRepo.save(itinerary);
+    }
+
+
+    public void addStopsToItinerary(int idItinerary, List<Stop> stops) {
+
+        Itinerary itinerary = itineraryRepo.findById(idItinerary)
+                .orElseThrow(() -> new IllegalArgumentException("Itinerary not found"));
+
+        Stop departure = itinerary.getDeparture();
+        departure.setOrderIndex(0);
+        stopRepo.save(departure);
+
+        Stop destination = itinerary.getDestination();
+
+        List<Stop> existingStops = itinerary.getStop()
+                .stream()
+                .filter(stop -> ! stop.equals(departure) && ! stop.equals(destination))
+                .sorted(Comparator.comparing(stop -> stop.getOrderIndex() !=null ? stop.getOrderIndex() : 0))
+                .toList();
+
+        // for theee initial stops li bin destination wldeparture
+        int orderIndex = 1;
+        for (Stop stop : existingStops) {
+            stop.setOrderIndex(orderIndex++);
+            stopRepo.save(stop);
+        }
+
+        for (Stop stop : stops) {
+            stop.setOrderIndex(orderIndex++);
+            stopRepo.save(stop);
+            itinerary.getStop().add(stop);
+        }
+
+        destination.setOrderIndex(orderIndex);
+        stopRepo.save(destination);
+        itineraryRepo.save(itinerary);
     }
 
 
