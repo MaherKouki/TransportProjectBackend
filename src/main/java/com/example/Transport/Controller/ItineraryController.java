@@ -56,6 +56,16 @@ public class ItineraryController {
     }
 
 
+    /*@GetMapping("/getItineraryByDestination/{destinationPoint}")
+    public ResponseEntity<List<Itinerary>> getItinerariesByDestination(@PathVariable String destinationPoint) {
+        List<Itinerary> itineraries = itineraryRepo.findByDestination_StopNameContainingIgnoreCase(destinationPoint).orElseThrow(()->new IllegalArgumentException("No itinerary found with that stop point"));
+        return ResponseEntity.ok(itineraries);
+    }*/
+
+
+
+
+
 
 
 
