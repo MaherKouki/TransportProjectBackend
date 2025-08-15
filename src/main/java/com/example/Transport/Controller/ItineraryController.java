@@ -44,23 +44,23 @@ public class ItineraryController {
     }
 
     @GetMapping("/getItineraryByDeparture/{departurePoint}")
-    public ResponseEntity<List<Itinerary>> getItinerariesByDeparture(@PathVariable String derpaturePoint) {
-        List<Itinerary> itineraries = itineraryRepo.findByDeparture_StopNameContainingIgnoreCase(derpaturePoint).orElseThrow(()->new IllegalArgumentException("No itinerary found with that stop point"));
+    public ResponseEntity<List<Itinerary>> getItinerariesByDeparture(@PathVariable String departurePoint) {
+        List<Itinerary> itineraries = itineraryRepo.findByDeparture_StopNameContainingIgnoreCase(departurePoint).orElseThrow(()->new IllegalArgumentException("No itinerary found with that departure "));
         return ResponseEntity.ok(itineraries);
     }
 
     @GetMapping("/getItineraryByDestination/{destinationPoint}")
     public ResponseEntity<List<Itinerary>> getItinerariesByDestination(@PathVariable String destinationPoint) {
-        List<Itinerary> itineraries = itineraryRepo.findByDestination_StopNameContainingIgnoreCase(destinationPoint).orElseThrow(()->new IllegalArgumentException("No itinerary found with that stop point"));
+        List<Itinerary> itineraries = itineraryRepo.findByDestination_StopNameContainingIgnoreCase(destinationPoint).orElseThrow(()->new IllegalArgumentException("No itinerary found with that destination point"));
         return ResponseEntity.ok(itineraries);
     }
 
 
-    /*@GetMapping("/getItineraryByDestination/{destinationPoint}")
-    public ResponseEntity<List<Itinerary>> getItinerariesByDestination(@PathVariable String destinationPoint) {
-        List<Itinerary> itineraries = itineraryRepo.findByDestination_StopNameContainingIgnoreCase(destinationPoint).orElseThrow(()->new IllegalArgumentException("No itinerary found with that stop point"));
+    @GetMapping("/getAllItineraries")
+    public ResponseEntity<List<Itinerary>> getAllItineraries() {
+        List<Itinerary> itineraries = itineraryRepo.findAll();
         return ResponseEntity.ok(itineraries);
-    }*/
+    }
 
 
 
