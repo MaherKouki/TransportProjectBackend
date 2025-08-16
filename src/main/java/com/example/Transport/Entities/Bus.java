@@ -23,9 +23,9 @@ public class Bus {
         private Long idBus;
 
         @Column(unique = true, nullable = false)
-        private String Matricule;
+        private String matricule;
 
-        private String Marque;
+        private String marque;
 
         @JsonIgnore
         @OneToMany (mappedBy = "bus")

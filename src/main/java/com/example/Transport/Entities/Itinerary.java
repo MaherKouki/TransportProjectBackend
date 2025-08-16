@@ -7,10 +7,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Data
@@ -29,7 +26,6 @@ public class Itinerary {
     private LocalTime startTime;
 
 
-
     @JsonIgnore
     @ManyToMany (mappedBy = "itinerary")
     private List<Stop> stop = new ArrayList<>();
@@ -39,6 +35,9 @@ public class Itinerary {
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Stop destination;
+
+    @ManyToMany
+    private Set<Bus> buses = new HashSet<>();
 
 
     //continue
