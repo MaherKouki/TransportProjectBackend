@@ -66,13 +66,13 @@ public class ItineraryController {
 
 
 
-    @PostMapping("/{id}/add-stops")
+    @PostMapping("/add-stops/{idItinerary}")
     public ResponseEntity<Void> addStops(
-            @PathVariable int id,
+            @PathVariable int idItinerary,
             @RequestBody List<Stop> stops
     ) {
         try {
-            itineraryService.addStopsToItinerary(id, stops);
+            itineraryService.addStopsToItinerary(idItinerary, stops);
             return ResponseEntity.ok().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
