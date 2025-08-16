@@ -65,7 +65,6 @@ public class ItineraryController {
 
 
 
-
     @PostMapping("/add-stops/{idItinerary}")
     public ResponseEntity<Void> addStops(
             @PathVariable int idItinerary,
