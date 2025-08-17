@@ -37,6 +37,11 @@ public class Itinerary {
     private Stop destination;
 
     @ManyToMany
+    @JoinTable(
+            name = "bus_itinerary",
+            joinColumns = @JoinColumn(name = "itinerary_id"),
+            inverseJoinColumns = @JoinColumn(name = "bus_id")
+    )
     private Set<Bus> buses = new HashSet<>();
 
 

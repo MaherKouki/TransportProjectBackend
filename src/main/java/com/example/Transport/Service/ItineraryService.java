@@ -49,8 +49,10 @@ public class ItineraryService {
 }*/
 
 
+import com.example.Transport.Entities.Bus;
 import com.example.Transport.Entities.Itinerary;
 import com.example.Transport.Entities.Stop;
+import com.example.Transport.Repositories.BusRepository;
 import com.example.Transport.Repositories.ItineraryRepo;
 import com.example.Transport.Repositories.StopRepo;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +72,7 @@ public class ItineraryService {
 
     private final ItineraryRepo itineraryRepo;
     private final StopRepo stopRepo;
-
+    private final BusRepository busRepository;
 
 
     @Transactional
@@ -134,6 +136,21 @@ public class ItineraryService {
 
         destination.setOrderIndex(orderIndex);
         stopRepo.save(destination);
+        itineraryRepo.save(itinerary);
+    }
+
+
+
+    @Transactional
+    public void affectItineraryToBus(int idItinerary , Long idBus) {
+
+        Bus bus = busRepository.findById(idBus)
+                .orElseThrow(()-> new IllegalArgumentException("Bus not found"));
+        Itinerary itinerary = itineraryRepo.findById(idItinerary)
+                .orElseThrow(()-> new IllegalArgumentException("Itinerary not found"));
+
+        bus.getItineraries().add(itinerary);
+        itinerary.getBuses().add(bus);
         itineraryRepo.save(itinerary);
     }
 
