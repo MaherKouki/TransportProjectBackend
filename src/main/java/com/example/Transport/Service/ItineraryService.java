@@ -141,18 +141,7 @@ public class ItineraryService {
 
 
 
-    @Transactional
-    public void affectItineraryToBus(int idItinerary , Long idBus) {
 
-        Bus bus = busRepository.findById(idBus)
-                .orElseThrow(()-> new IllegalArgumentException("Bus not found"));
-        Itinerary itinerary = itineraryRepo.findById(idItinerary)
-                .orElseThrow(()-> new IllegalArgumentException("Itinerary not found"));
-
-        bus.getItineraries().add(itinerary);
-        itinerary.getBuses().add(bus);
-        itineraryRepo.save(itinerary);
-    }
 
 
 
