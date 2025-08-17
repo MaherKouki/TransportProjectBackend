@@ -4,13 +4,17 @@ import com.example.Transport.Entities.Bus;
 import com.example.Transport.Entities.BusPosition;
 import com.example.Transport.Entities.BusPositionId;
 import com.example.Transport.Repositories.BusPositionRepository;
+import com.example.Transport.Repositories.BusRepository;
 import com.example.Transport.Service.BusPositionService;
 import com.example.Transport.Service.BusService;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Position;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.locationtech.jts.geom.Point;
 
@@ -26,10 +30,13 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:4200")  // autorise uniquement Angular local
 public class BusPositionController {
 
-    private final BusPositionService positionService;
+    private final BusPositionService busPositionService;
     private final BusPositionRepository busPosRepo;
     private final BusService busService;
 
+    private final GeometryFactory geometryFactory = new GeometryFactory();
+    private final BusRepository busRepository;
+    private final BusPositionRepository busPositionRepository;
 
 
     //http://localhost:8080/bus/position/2
@@ -82,14 +89,61 @@ public class BusPositionController {
     }
 
 
-
-
-
-
     @GetMapping( "/getPositionPerBus/{busId}")
     public List<BusPosition> getPositionPerBus(@PathVariable Long busId) {
         return busPosRepo.busPositionsForBus(busId);
     }
+
+
+
+
+    //todo: receive the location from the phone
+
+    /*@PostMapping("/location")
+    public ResponseEntity<String> receiveLocation(@RequestBody Map<String, Object> payload) {
+        System.out.println("Location received: " + payload);
+
+        // Example: extract fields
+        Double lat = (Double) payload.get("lat");
+        Double lon = (Double) payload.get("lon");
+
+        // Save in DB or compare with PC location
+        // locationRepository.save(new LocationEntity(lat, lon));
+
+        return ResponseEntity.ok("Location received");
+    }
+
+
+
+
+
+    @PostMapping("/update")
+    public ResponseEntity<BusPosition> updateLocation(
+            @RequestParam Long busId,
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam(required = false) Long timestamp
+    ) {
+        try {
+            BusPosition position = busPositionService.saveBusPosition(busId, latitude, longitude, timestamp);
+            return ResponseEntity.ok(position);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    // Endpoint to get the latest location of a bus
+    @GetMapping("/latest/{busId}")
+    public ResponseEntity<BusPosition> getLatestLocation(@PathVariable Long busId) {
+        BusPosition position = busPositionService.getLatestPosition(busId);
+        if (position == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(position);
+    }*/
+
+
+
+
+
 
 }
 
