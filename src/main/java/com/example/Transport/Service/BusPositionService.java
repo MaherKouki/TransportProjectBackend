@@ -65,8 +65,16 @@ public class BusPositionService {
     }
 
     // Get latest position of a bus
-    public BusPosition getLatestPosition(Long busId) {
+    /*public BusPosition getLatestPosition(Long busId) {
         return busPositionRepository.findByBusIdOrderByIdTimeDesc(busId)
+                .stream()
+                .findFirst()
+                .orElse(null);
+    }*/
+
+
+    public BusPosition getLatestPosition(Long busId) {
+        return busPositionRepository.findByIdBusIdOrderByIdTimeDesc(busId)
                 .stream()
                 .findFirst()
                 .orElse(null);

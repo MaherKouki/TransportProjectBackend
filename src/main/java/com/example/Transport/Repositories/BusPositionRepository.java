@@ -34,7 +34,11 @@ public interface BusPositionRepository extends JpaRepository<BusPosition, BusPos
     BusPosition findTopByBus_IdBusOrderById_TimeDesc(Long idBus);
 
 
-    List<BusPosition> findByBusIdOrderByIdTimeDesc(Long busId);
+    //List<BusPosition> findByBusIdOrderByIdTimeDesc(Long busId);
+
+    List<BusPosition> findByIdBusIdOrderByIdTimeDesc(Long busId);
+
+
 
 
 
