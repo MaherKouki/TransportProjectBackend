@@ -31,7 +31,7 @@ public class BusPositionService {
     }
 
 
-    public void savePosition(Long busId, double longitude, double latitude, long time) {
+    /*public void savePosition(Long busId, double longitude, double latitude, long time) {
         Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
         BusPosition position = new BusPosition();
         //position.setBusId(busId);
@@ -42,7 +42,48 @@ public class BusPositionService {
 
         position.setBus(busService.getBus(busId));
         busPosRepo.save(position);
+    }*/
+
+
+
+    @Transactional
+    public BusPosition saveBusPosition(Long busId, double latitude, double longitude, Long timestamp) {
+        Bus bus = busRepo.findById(busId)
+                .orElseThrow(() -> new IllegalArgumentException("Bus not found"));
+
+        BusPosition position = new BusPosition();
+        position.setBus(bus);
+        position.setPosition(geometryFactory.createPoint(new org.locationtech.jts.geom.Coordinate(longitude, latitude)));
+
+        long time = timestamp != null ? timestamp : Instant.now().toEpochMilli();
+
+        // Set embedded ID for composite key
+        position.setId(new com.example.Transport.Entities.BusPositionId(busId, time));
+        position.setSavedAt(Instant.now());
+
+        return busPositionRepository.save(position);
     }
+
+    // Get latest position of a bus
+    public BusPosition getLatestPosition(Long busId) {
+        return busPositionRepository.findByBusIdOrderByIdTimeDesc(busId)
+                .stream()
+                .findFirst()
+                .orElse(null);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -64,7 +105,7 @@ public class BusPositionService {
     }*/
 
 
-    @Transactional
+    /*@Transactional
     public BusPosition saveBusPosition(Long busId, double latitude, double longitude, Long timestamp) {
         Bus bus = busRepo.findById(busId)
                 .orElseThrow(() -> new IllegalArgumentException("Bus not found"));
@@ -85,7 +126,7 @@ public class BusPositionService {
     public BusPosition getLatestPosition(Long busId) {
         List<BusPosition> positions = busPositionRepository.findTop1ByIdBusIdOrderByIdTimeDesc(busId);
         return positions.isEmpty() ? null : positions.get(0);
-    }
+    }*/
 
 
 

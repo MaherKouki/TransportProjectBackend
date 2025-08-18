@@ -99,6 +99,62 @@ public class BusPositionController {
 
     //todo: receive the location from the phone
 
+    @PostMapping("/location")
+    public ResponseEntity<String> receiveLocation(@RequestBody Map<String, Object> payload) {
+        try {
+            // Extract fields safely
+            Long busId = ((Number) payload.get("busId")).longValue();
+            Double latitude = ((Number) payload.get("lat")).doubleValue();
+            Double longitude = ((Number) payload.get("lon")).doubleValue();
+            Long timestamp = payload.get("time") != null ? ((Number) payload.get("time")).longValue() : null;
+
+            // Save in DB
+            busPositionService.saveBusPosition(busId, latitude, longitude, timestamp);
+
+            return ResponseEntity.ok("Location received");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Invalid payload");
+        }
+    }
+
+    // Update or add a new bus position manually
+    @PostMapping("/update")
+    public ResponseEntity<BusPosition> updateLocation(
+            @RequestParam Long busId,
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam(required = false) Long timestamp
+    ) {
+        try {
+            BusPosition position = busPositionService.saveBusPosition(busId, latitude, longitude, timestamp);
+            return ResponseEntity.ok(position);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    // Get latest position of a bus
+    @GetMapping("/latest/{busId}")
+    public ResponseEntity<BusPosition> getLatestLocation(@PathVariable Long busId) {
+        BusPosition position = busPositionService.getLatestPosition(busId);
+        if (position == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(position);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /*@PostMapping("/location")
     public ResponseEntity<String> receiveLocation(@RequestBody Map<String, Object> payload) {
         System.out.println("Location received: " + payload);
