@@ -27,7 +27,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/busPosition")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200")  // autorise uniquement Angular local
+@CrossOrigin(origins = "*")  // autorise uniquement Angular local
 public class BusPositionController {
 
     private final BusPositionService busPositionService;
@@ -141,6 +141,38 @@ public class BusPositionController {
         if (position == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(position);
     }
+
+
+
+
+
+
+    // Allow any device
+    @PostMapping("/owntracks")
+    public ResponseEntity<String> receiveOwnTracksLocation(@RequestBody Map<String, Object> payload) {
+        try {
+            // OwnTracks sends coordinates as "lat", "lon", timestamp as "tst"
+            Double latitude = ((Number) payload.get("lat")).doubleValue();
+            Double longitude = ((Number) payload.get("lon")).doubleValue();
+
+            // timestamp in OwnTracks is in seconds, convert to milliseconds
+            Long timestamp = payload.get("tst") != null
+                    ? ((Number) payload.get("tst")).longValue() * 1000
+                    : Instant.now().toEpochMilli();
+
+            // You can hardcode busId for testing, or map devices to busIds
+            Long busId = 1L;
+
+            // Save position in DB
+            busPositionService.saveBusPosition(busId, latitude, longitude, timestamp);
+
+            return ResponseEntity.ok("OwnTracks location received successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Invalid OwnTracks payload");
+        }
+    }
+
 
 
 
