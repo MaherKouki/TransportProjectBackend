@@ -39,6 +39,21 @@ public class BusPositionController {
     private final BusPositionRepository busPositionRepository;
 
 
+
+
+    @PostMapping("/savePosition")
+    public BusPosition saveBusPosition(
+            @RequestParam Long busId,
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam long time
+    ) {
+        return busPositionService.savePosition(busId, latitude, longitude, time);
+    }
+
+
+
+
     //http://localhost:8080/bus/position/2
     @PostMapping("/position/{busId}")
     public ResponseEntity<?> updatePosition(@PathVariable Long busId,

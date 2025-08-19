@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,28 @@ public class BusPositionService {
         position.setBus(busService.getBus(busId));
         busPosRepo.save(position);
     }*/
+
+
+
+    //private final GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
+
+    public BusPosition savePosition(Long busId, double latitude, double longitude, long time) {
+        Bus bus = busRepo.findById(busId)
+                .orElseThrow(() -> new RuntimeException("Bus not found"));
+
+        Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
+
+        BusPositionId id = new BusPositionId(busId, time);
+
+        BusPosition busPosition = new BusPosition();
+        busPosition.setId(id);
+        busPosition.setBus(bus);
+        busPosition.setPosition(point);
+        busPosition.setTime(time);
+        busPosition.setSavedAt(Instant.now());
+
+        return busPositionRepository.save(busPosition);
+    }
 
 
 
