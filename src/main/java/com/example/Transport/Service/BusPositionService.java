@@ -48,9 +48,6 @@ public class BusPositionService {
     }*/
 
 
-
-
-
     /*public Stop nearestStop(double latitude, double longitude, Stop destination){
         if (destination == null || destination.getItinerary() == null) return null;
 
