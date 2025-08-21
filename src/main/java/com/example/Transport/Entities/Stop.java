@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Set;
 
 
@@ -38,7 +39,7 @@ public class Stop {
 
     @JsonIgnore
     @ManyToMany
-    private Set<Itinerary> itinerary;
+    private List<Itinerary> itinerary;
 
 
 }

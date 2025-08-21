@@ -1,10 +1,9 @@
 package com.example.Transport.Service;
 
-import com.example.Transport.Entities.Bus;
-import com.example.Transport.Entities.BusPosition;
-import com.example.Transport.Entities.BusPositionId;
+import com.example.Transport.Entities.*;
 import com.example.Transport.Repositories.BusPositionRepository;
 import com.example.Transport.Repositories.BusRepository;
+import com.example.Transport.Repositories.StopRepo;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
@@ -14,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -25,6 +26,7 @@ public class BusPositionService {
     private final GeometryFactory geometryFactory = new GeometryFactory();
     private final BusRepository busRepo;
     private final BusPositionRepository busPositionRepository;
+    private final StopRepo stopRepo;
 
 
     public List<BusPosition> getPositionsByBusId(Long busId) {
@@ -44,6 +46,75 @@ public class BusPositionService {
         position.setBus(busService.getBus(busId));
         busPosRepo.save(position);
     }*/
+
+
+
+
+
+    /*public Stop nearestStop(double latitude, double longitude, Stop destination){
+        if (destination == null || destination.getItinerary() == null) return null;
+
+        return destination.getItinerary().stream()
+                .filter(it -> it.getStop() != null)
+                .flatMap(it -> it.getStop().stream())
+                .min(Comparator.comparingDouble(stop -> haversine(latitude, longitude, stop.getLatitude(), stop.getLongitude())))
+                .orElse(null);
+    }*/
+
+    public Stop nearestStop(double latitude, double longitude, Stop destination){
+
+        if(destination == null || destination.getItinerary() == null)
+            return null;
+
+        return destination.getItinerary().stream()
+                .filter(itinerary -> itinerary.getStop() !=null)
+                .flatMap(iti-> iti.getStop().stream())
+                .min(Comparator.comparingDouble(stop ->haversine(latitude,longitude, stop.getLatitude(), stop.getLongitude())))
+                .orElse(null);
+    }
+
+
+    /*public Stop nearestStop(double latitude, double longitude, Stop destination) {
+        if (destination == null || destination.getItinerary() == null) {
+            return null; // pas d'itinéraire disponible
+        }
+
+        List<Itinerary> itineraries = destination.getItinerary();
+        Stop nearest = null;
+        double minDistance = Double.MAX_VALUE;
+
+        for (Itinerary itinerary : itineraries) {
+            if (itinerary.getStop() == null) continue; // éviter NullPointerException
+            for (Stop stop : itinerary.getStop()) {
+                double distance = haversine(latitude, longitude, stop.getLatitude(), stop.getLongitude());
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearest = stop;
+                }
+            }
+        }
+
+        return nearest;
+    }*/
+
+    private double haversine(double lat1, double lon1, double lat2, double lon2) {
+        final int R = 6371000; // rayon de la Terre en mètres
+        double latRad1 = Math.toRadians(lat1);
+        double latRad2 = Math.toRadians(lat2);
+        double deltaLat = Math.toRadians(lat2 - lat1);
+        double deltaLon = Math.toRadians(lon2 - lon1);
+
+        double a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+                Math.cos(latRad1) * Math.cos(latRad2) *
+                        Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        return R * c; // distance en mètres
+    }
+
+
+
 
 
 
