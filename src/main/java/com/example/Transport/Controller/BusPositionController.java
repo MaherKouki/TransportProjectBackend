@@ -40,7 +40,7 @@ public class BusPositionController {
 
 
 
-    /*@PostMapping("/locationn")
+    @PostMapping("/locationn")
     public ResponseEntity<String> receiveLocationn(@RequestBody Map<String, Object> payload) {
         try {
             Long busId = ((Number) payload.get("busId")).longValue();
@@ -54,12 +54,12 @@ public class BusPositionController {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Invalid payload");
         }
-    }*/
+    }
 
 
 
 
-    @PostMapping("/savePosition")
+    /*@PostMapping("/savePosition")
     public BusPosition saveBusPosition(
             @RequestParam Long busId,
             @RequestParam double latitude,
@@ -67,7 +67,7 @@ public class BusPositionController {
             @RequestParam long time
     ) {
         return busPositionService.savePosition(busId, latitude, longitude, time);
-    }
+    }*/
 
 
 
