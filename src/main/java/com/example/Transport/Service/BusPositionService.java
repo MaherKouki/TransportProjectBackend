@@ -60,21 +60,22 @@ public class BusPositionService {
     }*/
 
 
-    public Duration travelTimeToNearestStop(double latitude, double longitude, Stop destination) {
-        Stop nearest = nearestStop(latitude, longitude, destination);
+    public Duration travelTimeToNearestStop(double latitude,double longitude,Stop destination) {
+        Stop nearest=nearestStop(latitude,longitude,destination);
 
-        if (nearest == null)
+        if (nearest==null)
             return Duration.ZERO;
 
-        double distanceMeters = haversine(latitude, longitude, nearest.getLatitude(), nearest.getLongitude());
+        double distanceMeters = haversine(latitude,longitude,nearest.getLatitude(),nearest.getLongitude());
 
         // 2. Average speed (example: walking = 1.4 m/s)
-        double speed = 4;
+        double walkingSpeed=4;
 
         // 3. Duration
-        long travelSeconds = (long) (distanceMeters / speed);
+        long travelSeconds = (long)(distanceMeters / walkingSpeed);
         return Duration.ofSeconds(travelSeconds);
     }
+
 
 
 
