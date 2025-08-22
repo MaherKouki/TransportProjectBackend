@@ -12,7 +12,9 @@ import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -32,7 +34,6 @@ public class BusPositionService {
     public List<BusPosition> getPositionsByBusId(Long busId) {
         return busPosRepo.busPositionsForBus(busId);
     }
-
 
     /*public void savePosition(Long busId, double longitude, double latitude, long time) {
         Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
@@ -58,8 +59,28 @@ public class BusPositionService {
                 .orElse(null);
     }*/
 
-    public Stop nearestStop(double latitude, double longitude, Stop destination){
 
+    public Duration travelTimeToNearestStop(double latitude, double longitude, Stop destination) {
+        Stop nearest = nearestStop(latitude, longitude, destination);
+
+        if (nearest == null)
+            return Duration.ZERO;
+
+        double distanceMeters = haversine(latitude, longitude, nearest.getLatitude(), nearest.getLongitude());
+
+        // 2. Average speed (example: walking = 1.4 m/s)
+        double speed = 1.4;
+
+        // 3. Duration
+        long travelSeconds = (long) (distanceMeters / speed);
+        return Duration.ofSeconds(travelSeconds);
+    }
+
+
+
+
+
+    public Stop nearestStop(double latitude, double longitude, Stop destination){
         if(destination == null || destination.getItinerary() == null)
             return null;
 
