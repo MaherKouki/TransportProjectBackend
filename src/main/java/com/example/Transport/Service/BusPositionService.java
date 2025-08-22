@@ -69,7 +69,7 @@ public class BusPositionService {
         double distanceMeters = haversine(latitude, longitude, nearest.getLatitude(), nearest.getLongitude());
 
         // 2. Average speed (example: walking = 1.4 m/s)
-        double speed = 1.4;
+        double speed = 4;
 
         // 3. Duration
         long travelSeconds = (long) (distanceMeters / speed);
