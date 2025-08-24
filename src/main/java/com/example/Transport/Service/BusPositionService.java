@@ -60,8 +60,12 @@ public class BusPositionService {
     }*/
 
 
-    public Duration travelTimeToNearestStop(double latitude,double longitude,Stop destination) {
-        Stop nearest=nearestStop(latitude,longitude,destination);
+    public Duration timeToNearestStop(double latitude,double longitude,int destinationId) {
+
+        //Stop destination = stopRepo.findById(destinationId)
+                //.orElseThrow(() -> new RuntimeException("Stop not found"));
+
+        Stop nearest=nearestStop(latitude,longitude,destinationId);
 
         if (nearest==null)
             return Duration.ZERO;
@@ -81,16 +85,24 @@ public class BusPositionService {
 
 
 
-    public Stop nearestStop(double latitude, double longitude, Stop destination){
-        if(destination == null || destination.getItinerary() == null)
-            return null;
+    public Stop nearestStop(double latitude, double longitude, int destinationId) {
+        // 1️⃣ Fetch destination Stop from DB
+        Stop destination = stopRepo.findById(destinationId)
+                .orElseThrow(() -> new RuntimeException("Stop not found"));
 
+        // 2️⃣ Check if the Stop or its itineraries exist
+        if (destination.getItinerary() == null || destination.getItinerary().isEmpty()) {
+            return null;
+        }
+
+        // 3️⃣ Find nearest stop using Haversine
         return destination.getItinerary().stream()
-                .filter(itinerary -> itinerary.getStop() !=null)
-                .flatMap(iti-> iti.getStop().stream())
-                .min(Comparator.comparingDouble(stop ->haversine(latitude,longitude, stop.getLatitude(), stop.getLongitude())))
+                .filter(itinerary -> itinerary.getStop() != null && !itinerary.getStop().isEmpty())
+                .flatMap(it -> it.getStop().stream())
+                .min(Comparator.comparingDouble(stop -> haversine(latitude, longitude, stop.getLatitude(), stop.getLongitude())))
                 .orElse(null);
     }
+
 
 
     /*public Stop nearestStop(double latitude, double longitude, Stop destination) {

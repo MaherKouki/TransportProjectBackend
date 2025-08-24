@@ -3,10 +3,13 @@ package com.example.Transport.Controller;
 import com.example.Transport.Entities.Bus;
 import com.example.Transport.Entities.BusPosition;
 import com.example.Transport.Entities.BusPositionId;
+import com.example.Transport.Entities.Stop;
 import com.example.Transport.Repositories.BusPositionRepository;
 import com.example.Transport.Repositories.BusRepository;
+import com.example.Transport.Repositories.StopRepo;
 import com.example.Transport.Service.BusPositionService;
 import com.example.Transport.Service.BusService;
+import com.example.Transport.Service.StopService;
 import lombok.RequiredArgsConstructor;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.locationtech.jts.geom.Point;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +37,8 @@ public class BusPositionController {
     private final BusPositionService busPositionService;
     private final BusPositionRepository busPosRepo;
     private final BusService busService;
+    private final StopService stopService;
+    private final StopRepo stopRepo;
 
     private final GeometryFactory geometryFactory = new GeometryFactory();
     private final BusRepository busRepository;
@@ -40,7 +46,41 @@ public class BusPositionController {
 
 
 
-    @PostMapping("/locationn")
+
+
+    @GetMapping("/nearest")
+    public ResponseEntity<Stop> getNearestStop(
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam int destinationId) {
+
+        // 1️⃣ Fetch the destination Stop from DB
+        //Stop destination = stopRepo.findById(destinationId)
+                //.orElseThrow(() -> new RuntimeException("Destination stop not found"));
+
+        // 2️⃣ Call your exact nearestStop(...) method
+        Stop nearest = busPositionService.nearestStop(latitude, longitude, destinationId);
+
+        // 3️⃣ Return the Stop directly
+        return ResponseEntity.ok(nearest);
+    }
+
+    @GetMapping("/nearest-time")
+    public ResponseEntity<Long> getTravelTimeToNearestStop(
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam int destinationId) {
+
+        Duration travelTime = busPositionService.timeToNearestStop(latitude, longitude, destinationId);
+
+        // Return travel time in minutes
+        return ResponseEntity.ok(travelTime.toMinutes());
+    }
+
+
+
+
+    /*@PostMapping("/locationn")
     public ResponseEntity<String> receiveLocationn(@RequestBody Map<String, Object> payload) {
         try {
             Long busId = ((Number) payload.get("busId")).longValue();
@@ -54,12 +94,12 @@ public class BusPositionController {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Invalid payload");
         }
-    }
+    }*/
 
 
 
 
-    /*@PostMapping("/savePosition")
+    @PostMapping("/savePosition")
     public BusPosition saveBusPosition(
             @RequestParam Long busId,
             @RequestParam double latitude,
@@ -67,7 +107,7 @@ public class BusPositionController {
             @RequestParam long time
     ) {
         return busPositionService.savePosition(busId, latitude, longitude, time);
-    }*/
+    }
 
 
 
