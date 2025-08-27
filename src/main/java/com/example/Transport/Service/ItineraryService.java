@@ -174,7 +174,7 @@ public class ItineraryService {
 
 
 
-    @Transactional
+    /*@Transactional
     public Itinerary createItineraryFromStops(List<Stop> stops) {
         if (stops == null || stops.size() < 2) {
             throw new IllegalArgumentException("At least two stops (departure and destination) are required.");
@@ -209,7 +209,7 @@ public class ItineraryService {
         stopRepo.saveAll(savedStops);
 
         return savedItinerary;
-    }
+    }*/
 
 /*
     public Itinerary createItineraryFromMarkers(Stop departure, Stop destination) {
@@ -261,7 +261,7 @@ public class ItineraryService {
         return itineraryRepo.findById(id);
     }
 
-    @Transactional
+    /*@Transactional
     public Itinerary addStopToItinerary(int itineraryId, Stop stop) {
         Optional<Itinerary> itineraryOpt = itineraryRepo.findById(itineraryId);
 
@@ -287,7 +287,7 @@ public class ItineraryService {
         // Save both entities
         stopRepo.save(savedStop);
         return itineraryRepo.save(itinerary);
-    }
+    }*/
 
     @Transactional
     public void deleteItinerary(int id) {
