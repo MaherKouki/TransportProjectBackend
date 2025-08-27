@@ -64,7 +64,6 @@ public class BusPositionService {
 
         //Stop destination = stopRepo.findById(destinationId)
                 //.orElseThrow(() -> new RuntimeException("Stop not found"));
-
         Stop nearest=nearestStop(latitude,longitude,destinationId);
 
         if (nearest==null)

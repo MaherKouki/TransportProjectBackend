@@ -172,7 +172,7 @@ public class BusPositionController {
 
     //todo: receive the location from the phone
 
-    @PostMapping("/location")
+    /*@PostMapping("/location")
     public ResponseEntity<String> receiveLocation(@RequestBody Map<String, Object> payload) {
         try {
             // Extract fields safely
@@ -189,7 +189,7 @@ public class BusPositionController {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Invalid payload");
         }
-    }
+    }*/
 
     // Update or add a new bus position manually
     @PostMapping("/update")
@@ -221,7 +221,7 @@ public class BusPositionController {
 
 
     // Allow any device
-    @PostMapping("/owntracks")
+    /*@PostMapping("/owntracks")
     public ResponseEntity<String> receiveOwnTracksLocation(@RequestBody Map<String, Object> payload) {
         try {
             // OwnTracks sends coordinates as "lat", "lon", timestamp as "tst"
@@ -244,7 +244,7 @@ public class BusPositionController {
             e.printStackTrace();
             return ResponseEntity.badRequest().body("Invalid OwnTracks payload");
         }
-    }
+    }*/
 
 
 
