@@ -90,14 +90,14 @@ public class BusPositionService {
                 .orElseThrow(() -> new RuntimeException("Stop not found"));
 
         // 2️⃣ Check if the Stop or its itineraries exist
-        if (destination.getItinerary() == null || destination.getItinerary().isEmpty()) {
+        if (destination.getItineraries() == null || destination.getItineraries().isEmpty()) {
             return null;
         }
 
         // 3️⃣ Find nearest stop using Haversine
-        return destination.getItinerary().stream()
-                .filter(itinerary -> itinerary.getStop() != null && !itinerary.getStop().isEmpty())
-                .flatMap(it -> it.getStop().stream())
+        return destination.getItineraries().stream()
+                .filter(itinerary -> itinerary.getStops() != null && !itinerary.getStops().isEmpty())
+                .flatMap(it -> it.getStops().stream())
                 .min(Comparator.comparingDouble(stop -> haversine(latitude, longitude, stop.getLatitude(), stop.getLongitude())))
                 .orElse(null);
     }

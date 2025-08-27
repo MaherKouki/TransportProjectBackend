@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -38,8 +39,8 @@ public class Stop {
 
 
     @JsonIgnore
-    @ManyToMany
-    private List<Itinerary> itinerary;
+    @ManyToMany(mappedBy = "stops")
+    private List<Itinerary> itineraries = new ArrayList<>();
 
 
 }

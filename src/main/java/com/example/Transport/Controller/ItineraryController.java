@@ -4,6 +4,7 @@ package com.example.Transport.Controller;
 import com.example.Transport.Entities.Itinerary;
 import com.example.Transport.Entities.Stop;
 import com.example.Transport.Repositories.ItineraryRepo;
+import com.example.Transport.Repositories.StopRepo;
 import com.example.Transport.Service.ItineraryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ public class ItineraryController {
 
     private final ItineraryService itineraryService;
     private final ItineraryRepo itineraryRepo;
+    private final StopRepo stopRepo;
 
 
 
@@ -54,6 +56,15 @@ public class ItineraryController {
         List<Itinerary> itineraries = itineraryRepo.findByDestination_StopNameContainingIgnoreCase(destinationPoint).orElseThrow(()->new IllegalArgumentException("No itinerary found with that destination point"));
         return ResponseEntity.ok(itineraries);
     }
+
+    @GetMapping("/getItineraryByStop/{stopPoint}")
+    public ResponseEntity<List<Itinerary>> getItinerariesByStop(@PathVariable String stopPoint) {
+        List<Itinerary> itineraries = itineraryRepo.findStopByDepartureOrDestination(stopPoint)
+                .orElseThrow(()->new IllegalArgumentException("No itinerary found with that stop point"));
+        return ResponseEntity.ok(itineraries);
+    }
+
+
 
 
 

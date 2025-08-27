@@ -26,14 +26,10 @@ public class Itinerary {
     private LocalTime startTime;
 
 
-    @JsonIgnore
-    @ManyToMany (mappedBy = "itinerary")
-    private List<Stop> stop = new ArrayList<>();
-
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne//(cascade = CascadeType.ALL)
     private Stop departure ;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne//(cascade = CascadeType.ALL)
     private Stop destination;
 
     @ManyToMany
@@ -45,35 +41,13 @@ public class Itinerary {
     private List<Bus> buses = new ArrayList<>();
 
 
-    //continue
-    //private Stop departure;
+    @ManyToMany
+    @JoinTable(
+            name = "stop_itinerary",
+            joinColumns = @JoinColumn(name = "itinerary_id"),
+            inverseJoinColumns = @JoinColumn(name = "stop_id")
+    )
+    private List<Stop> stops = new ArrayList<>();
 
-/*
-    public Stop getDeparture() {
-        return stop.stream().min(Comparator.comparing(Stop::getOrderIndex)).orElse(null);
-    }
-
-    public Stop getDestination() {
-        return stop.stream().max(Comparator.comparing(Stop::getOrderIndex)).orElse(null);
-    }*/
-
-    /*public String nameOfItinerary(Itinerary itinerary) {
-        String departure = itinerary.departure.getStopName();
-        String destination = itinerary.destination.getStopName();
-        return departure + " " + destination;
-    }*/
-
-
-
-
-/*
-    private String departName;
-    private double departAltitude;
-    private double departLongitude;
-
-    private String destinationName;
-    private double destinationAltitude;
-    private double destinationLongitude;
-*/
 
 }
