@@ -77,10 +77,10 @@ public class ItineraryController {
     }
 
 
-    @GetMapping("/getStopByItinerary/{stopPoint}")
-    public ResponseEntity<List<Stop>> getStopsByItinerary(@PathVariable String stopPoint) {
+    @GetMapping("/getStopByItinerary/{itineraryName}")
+    public ResponseEntity<List<Stop>> getStopsByItinerary(@PathVariable String itineraryName) {
         // FIXED: Now returns List<Itinerary> directly
-        List<Stop> stops = stopRepo.findStopsByItinerary(stopPoint);
+        List<Stop> stops = stopRepo.findStopsByItinerary(itineraryName);
 
         return ResponseEntity.ok(stops);
     }
