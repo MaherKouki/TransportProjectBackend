@@ -73,7 +73,6 @@ public class ItineraryController {
         if (itineraries.isEmpty()) {
             throw new IllegalArgumentException("No itinerary found with that stop point: " + stopPoint);
         }
-
         return ResponseEntity.ok(itineraries);
     }
 
