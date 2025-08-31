@@ -83,9 +83,6 @@ public class ItineraryController {
 
 
 
-
-
-
     @GetMapping("/getAllItineraries")
     public ResponseEntity<List<Itinerary>> getAllItineraries() {
         List<Itinerary> itineraries = itineraryRepo.findAll();

@@ -48,6 +48,7 @@ public class BusPositionController {
 
 
 
+    //http://localhost:8080/busPosition/nearest?latitude=36.84&longitude=10.20&destinationId=2
     @GetMapping("/nearest")
     public ResponseEntity<Stop> getNearestStop(
             @RequestParam double latitude,
