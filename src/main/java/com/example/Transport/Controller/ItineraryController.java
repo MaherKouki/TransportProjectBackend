@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/itinerary")
@@ -57,10 +58,22 @@ public class ItineraryController {
         return ResponseEntity.ok(itineraries);
     }
 
-    @GetMapping("/getItineraryByStop/{stopPoint}")
+    /*@GetMapping("/getItineraryByStop/{stopPoint}")
     public ResponseEntity<List<Itinerary>> getItinerariesByStop(@PathVariable String stopPoint) {
         List<Itinerary> itineraries = itineraryRepo.findStopByDepartureOrDestination(stopPoint)
                 .orElseThrow(()->new IllegalArgumentException("No itinerary found with that stop point"));
+        return ResponseEntity.ok(itineraries);
+    }*/
+
+    @GetMapping("/getItineraryByStop/{stopPoint}")
+    public ResponseEntity<Optional<List<Itinerary>>> getItinerariesByStop(@PathVariable String stopPoint) {
+        // FIXED: Now returns List<Itinerary> directly
+        Optional<List<Itinerary>> itineraries = itineraryRepo.findStopByDepartureOrDestination(stopPoint);
+
+        if (itineraries.isEmpty()) {
+            throw new IllegalArgumentException("No itinerary found with that stop point: " + stopPoint);
+        }
+
         return ResponseEntity.ok(itineraries);
     }
 

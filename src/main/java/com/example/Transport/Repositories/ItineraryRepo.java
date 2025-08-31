@@ -11,12 +11,12 @@ import java.util.Optional;
 
 public interface ItineraryRepo extends JpaRepository<Itinerary, Integer> {
 
-    @Query("""
+    /*@Query("""
     SELECT i from Itinerary i
     where i.departure.stopName = :stopPoint
     OR i.destination.stopName = :stopPoint
     """)
-    Optional<List<Itinerary>> findStopByDepartureOrDestination(@Param("stopPoint") String stopPoint);
+    Optional<List<Itinerary>> findStopByDepartureOrDestination(@Param("stopPoint") String stopPoint);*/
 
 
     List<Itinerary> findDistinctByStops_StopNameContainingIgnoreCase(String stopName);
@@ -30,5 +30,21 @@ public interface ItineraryRepo extends JpaRepository<Itinerary, Integer> {
     Optional<List<Itinerary>> findByDestination_StopNameContainingIgnoreCase(String nameStop);
 
 
+
+    // FIXED: Find itineraries that contain a stop (departure, destination, OR intermediate stops)
+    @Query("SELECT DISTINCT i FROM Itinerary i " +
+            "LEFT JOIN i.stops s " +
+            "WHERE LOWER(i.departure.stopName) LIKE LOWER(CONCAT('%', :stopName, '%')) " +
+            "OR LOWER(i.destination.stopName) LIKE LOWER(CONCAT('%', :stopName, '%')) " +
+            "OR LOWER(s.stopName) LIKE LOWER(CONCAT('%', :stopName, '%'))")
+    Optional<List<Itinerary>> findStopByDepartureOrDestination(@Param("stopName") String stopName);
+
+    // Alternative method with better name
+    @Query("SELECT DISTINCT i FROM Itinerary i " +
+            "LEFT JOIN i.stops s " +
+            "WHERE LOWER(i.departure.stopName) LIKE LOWER(CONCAT('%', :stopName, '%')) " +
+            "OR LOWER(i.destination.stopName) LIKE LOWER(CONCAT('%', :stopName, '%')) " +
+            "OR LOWER(s.stopName) LIKE LOWER(CONCAT('%', :stopName, '%'))")
+    Optional<List<Itinerary>> findItinerariesContainingStop(@Param("stopName") String stopName);
 
 }

@@ -13,4 +13,7 @@ public interface StopRepo extends JpaRepository<Stop, Integer> {
 
     Optional<Stop> findByStopNameAndLatitudeAndLongitude(String stopName, double latitude, double longitude);
 
+
+
+
 }

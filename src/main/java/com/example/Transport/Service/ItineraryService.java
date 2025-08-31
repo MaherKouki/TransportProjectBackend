@@ -1,6 +1,5 @@
 package com.example.Transport.Service;
 
-import com.example.Transport.Entities.Bus;
 import com.example.Transport.Entities.Itinerary;
 import com.example.Transport.Entities.Stop;
 import com.example.Transport.Repositories.BusRepository;
@@ -12,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -22,9 +22,7 @@ public class ItineraryService {
     private final StopRepo stopRepo;
     private final BusRepository busRepository;
 
-    /**
-     * Create an itinerary from departure and destination stops
-     */
+
 
 
     @Transactional
@@ -66,7 +64,7 @@ public class ItineraryService {
     }
 
     @Transactional
-    public Itinerary addStopsToItinerary(int idItinerary, List<Stop> stops) {
+    public void addStopsToItinerary(int idItinerary, List<Stop> stops) {
         // Fetch itinerary
         Itinerary itinerary = itineraryRepo.findById(idItinerary)
                 .orElseThrow(() -> new IllegalArgumentException("Itinerary not found"));
@@ -78,7 +76,7 @@ public class ItineraryService {
         // Determine starting orderIndex
         int orderIndex = itinerary.getStops().stream()
                 .map(Stop::getOrderIndex)
-                .filter(i -> i != null)
+                .filter(Objects::nonNull)
                 .max(Integer::compare)
                 .orElse(0) + 1;
 
@@ -111,37 +109,29 @@ public class ItineraryService {
             }
         }
 
-        return itineraryRepo.save(itinerary);
+        itineraryRepo.save(itinerary);
     }
 
 
 
 
-    /**
-     * Get all itineraries
-     */
+
     public List<Itinerary> getAllItineraries() {
         return itineraryRepo.findAll();
     }
 
-    /**
-     * Get itinerary by ID
-     */
+
     public Optional<Itinerary> getItineraryById(int id) {
         return itineraryRepo.findById(id);
     }
 
-    /**
-     * Delete an itinerary
-     */
+
     @Transactional
     public void deleteItinerary(int id) {
         itineraryRepo.deleteById(id);
     }
 
-    /**
-     * Helper method to save or retrieve existing stop
-     */
+
     private Stop saveOrGetStop(Stop stop) {
         return stopRepo.findByStopNameAndLatitudeAndLongitude(
                 stop.getStopName(), stop.getLatitude(), stop.getLongitude()
