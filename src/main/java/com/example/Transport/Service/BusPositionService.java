@@ -35,6 +35,25 @@ public class BusPositionService {
         return busPosRepo.busPositionsForBus(busId);
     }
 
+
+    public double BusStopDistance(Long busId, int stopId) {
+
+        Bus bus = busRepo.findById(busId)
+                .orElseThrow(()-> new RuntimeException("Bus not found"));
+
+
+        Stop stop = stopRepo.findById(stopId)
+                .orElseThrow(()-> new RuntimeException("stop not found"));
+
+        BusPosition busPosition = getLatestPosition(busId);
+
+        double distanceM = haversine(busPosition.getLatitude(), busPosition.getLongitude(), stop.getLatitude(), stop.getLongitude()) * 1000;
+
+        return distanceM;
+    }
+
+
+
     /*public void savePosition(Long busId, double longitude, double latitude, long time) {
         Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
         BusPosition position = new BusPosition();
