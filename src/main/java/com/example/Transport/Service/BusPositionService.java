@@ -59,27 +59,24 @@ public class BusPositionService {
                 .orElse(null);
     }*/
 
+    public Duration timeToNearestStop(double latitude, double longitude, int destinationId) {
+        Stop nearest = nearestStop(latitude, longitude, destinationId);
 
-    public Duration timeToNearestStop(double latitude,double longitude,int destinationId) {
-
-        //Stop destination = stopRepo.findById(destinationId)
-                //.orElseThrow(() -> new RuntimeException("Stop not found"));
-        Stop nearest=nearestStop(latitude,longitude,destinationId);
-
-        if (nearest==null)
+        if (nearest == null)
             return Duration.ZERO;
 
-        double distanceMeters = haversine(latitude,longitude,nearest.getLatitude(),nearest.getLongitude());
+        // 1. Distance in kilometers → convert to meters
+        double distanceKm = haversine(latitude, longitude, nearest.getLatitude(), nearest.getLongitude());
+        double distanceMeters = distanceKm * 1000;
 
-        // 2. Average speed (example: walking = 1.4 m/s)
-        double walkingSpeed=4;
+        // 2. Average walking speed (1.4 m/s ≈ 5 km/h)
+        double walkingSpeed = 1.4;
 
-        // 3. Duration
-        long travelSeconds = (long)(distanceMeters / walkingSpeed);
+        // 3. Travel time in seconds
+        long travelSeconds = (long) (distanceMeters / walkingSpeed);
+
         return Duration.ofSeconds(travelSeconds);
     }
-
-
 
 
 

@@ -66,6 +66,8 @@ public class BusPositionController {
         return ResponseEntity.ok(nearest);
     }
 
+
+
     @GetMapping("/nearest-time")
     public ResponseEntity<Long> getTravelTimeToNearestStop(
             @RequestParam double latitude,

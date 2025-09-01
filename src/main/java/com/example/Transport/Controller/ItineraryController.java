@@ -65,6 +65,8 @@ public class ItineraryController {
         return ResponseEntity.ok(itineraries);
     }*/
 
+
+    //http://localhost:8080/itinerary/getItineraryByStop/Station x
     @GetMapping("/getItineraryByStop/{stopPoint}")
     public ResponseEntity<Optional<List<Itinerary>>> getItinerariesByStop(@PathVariable String stopPoint) {
         // FIXED: Now returns List<Itinerary> directly
@@ -77,6 +79,7 @@ public class ItineraryController {
     }
 
 
+    //http://localhost:8080/itinerary/getStopByItinerary/Central Station - Airport
     @GetMapping("/getStopByItinerary/{itineraryName}")
     public ResponseEntity<List<Stop>> getStopsByItinerary(@PathVariable String itineraryName) {
         // FIXED: Now returns List<Itinerary> directly
