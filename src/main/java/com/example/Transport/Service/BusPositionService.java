@@ -36,11 +36,13 @@ public class BusPositionService {
     }
 
 
-    public double BusStopDistance(Long busId, int stopId) {
+    public Double BusStopDistance(Long busId, int stopId) {
 
-        Bus bus = busRepo.findById(busId)
-                .orElseThrow(()-> new RuntimeException("Bus not found"));
+        /*Bus bus = busRepo.findById(busId)
+                .orElseThrow(()-> new RuntimeException("Bus not found"));*/
 
+        if (!busRepo.existsById(busId))
+            return null;
 
         Stop stop = stopRepo.findById(stopId)
                 .orElseThrow(()-> new RuntimeException("stop not found"));
