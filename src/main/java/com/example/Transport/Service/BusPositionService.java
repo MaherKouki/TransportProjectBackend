@@ -43,7 +43,6 @@ public class BusPositionService {
 
         if (!busRepo.existsById(busId))
             return null;
-
         Stop stop = stopRepo.findById(stopId)
                 .orElseThrow(()-> new RuntimeException("stop not found"));
 
