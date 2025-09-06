@@ -83,6 +83,19 @@ public class BusPositionController {
         return ResponseEntity.ok(travelTime.toMinutes());
     }
 
+    @GetMapping("/{busId}/distance-to-stop/{stopId}")
+    public ResponseEntity<Double> getDistanceBusToStop(
+            @PathVariable Long busId,
+            @PathVariable int stopId) {
+
+        try {
+            double distance = busPositionService.calculateDistanceBusToStop(busId, stopId);
+            return ResponseEntity.ok(distance);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build(); // or return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null)
+        }
+    }
+
 
 
 

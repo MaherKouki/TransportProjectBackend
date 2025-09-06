@@ -36,22 +36,22 @@ public class BusPositionService {
     }
 
 
-    public Double BusStopDistance(Long busId, int stopId) {
+    public double calculateDistanceBusToStop(Long busId, int stopId) {
+        if (!busRepo.existsById(busId)) {
+            throw new RuntimeException("Bus not found with id: " + busId);
+        }
 
-        /*Bus bus = busRepo.findById(busId)
-                .orElseThrow(()-> new RuntimeException("Bus not found"));*/
-
-        if (!busRepo.existsById(busId))
-            return null;
         Stop stop = stopRepo.findById(stopId)
-                .orElseThrow(()-> new RuntimeException("stop not found"));
+                .orElseThrow(() -> new RuntimeException("Stop not found with id: " + stopId));
 
         BusPosition busPosition = getLatestPosition(busId);
+        if (busPosition == null) {
+            throw new RuntimeException("No position found for bus with id: " + busId);
+        }
 
-        double distanceM = haversine(busPosition.getLatitude(), busPosition.getLongitude(), stop.getLatitude(), stop.getLongitude()) * 1000;
-
-        return distanceM;
+        return haversine(busPosition.getLatitude(), busPosition.getLongitude(), stop.getLatitude(), stop.getLongitude()) * 1000; // meters
     }
+
 
 
 
