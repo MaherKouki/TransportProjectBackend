@@ -14,8 +14,6 @@ import java.util.Set;
 @Entity
 @Data
 public class Stop {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idStop;
@@ -36,7 +34,6 @@ public class Stop {
 
     /*@ManyToOne
     private Itinerary itinerary;*/
-
 
     @JsonIgnore
     @ManyToMany(mappedBy = "stops")

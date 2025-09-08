@@ -55,30 +55,6 @@ public class BusPositionService {
 
 
 
-    /*public void savePosition(Long busId, double longitude, double latitude, long time) {
-        Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
-        BusPosition position = new BusPosition();
-        //position.setBusId(busId);
-        position.setPosition(point);
-        position.setSavedAt(Instant.now());
-
-        position.setTime(time);
-
-        position.setBus(busService.getBus(busId));
-        busPosRepo.save(position);
-    }*/
-
-
-    /*public Stop nearestStop(double latitude, double longitude, Stop destination){
-        if (destination == null || destination.getItinerary() == null) return null;
-
-        return destination.getItinerary().stream()
-                .filter(it -> it.getStop() != null)
-                .flatMap(it -> it.getStop().stream())
-                .min(Comparator.comparingDouble(stop -> haversine(latitude, longitude, stop.getLatitude(), stop.getLongitude())))
-                .orElse(null);
-    }*/
-
     public Duration timeToNearestStop(double latitude, double longitude, int destinationId) {
         Stop nearest = nearestStop(latitude, longitude, destinationId);
 
@@ -97,8 +73,6 @@ public class BusPositionService {
 
         return Duration.ofSeconds(travelSeconds);
     }
-
-
 
 
     public Stop nearestStop(double latitude, double longitude, int destinationId) {
@@ -120,30 +94,6 @@ public class BusPositionService {
     }
 
 
-
-    /*public Stop nearestStop(double latitude, double longitude, Stop destination) {
-        if (destination == null || destination.getItinerary() == null) {
-            return null; // pas d'itinéraire disponible
-        }
-
-        List<Itinerary> itineraries = destination.getItinerary();
-        Stop nearest = null;
-        double minDistance = Double.MAX_VALUE;
-
-        for (Itinerary itinerary : itineraries) {
-            if (itinerary.getStop() == null) continue; // éviter NullPointerException
-            for (Stop stop : itinerary.getStop()) {
-                double distance = haversine(latitude, longitude, stop.getLatitude(), stop.getLongitude());
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    nearest = stop;
-                }
-            }
-        }
-
-        return nearest;
-    }*/
-
     private double haversine(double lat1, double lon1, double lat2, double lon2) {
         final int R = 6371000; // rayon de la Terre en mètres
         double latRad1 = Math.toRadians(lat1);
@@ -159,9 +109,6 @@ public class BusPositionService {
 
         return R * c; // distance en mètres
     }
-
-
-
 
 
 
@@ -186,7 +133,6 @@ public class BusPositionService {
     }
 
 
-
     @Transactional
     public BusPosition saveBusPosition(Long busId, double latitude, double longitude, Long timestamp) {
         Bus bus = busRepo.findById(busId)
@@ -205,14 +151,6 @@ public class BusPositionService {
         return busPositionRepository.save(position);
     }
 
-    // Get latest position of a bus
-    /*public BusPosition getLatestPosition(Long busId) {
-        return busPositionRepository.findByBusIdOrderByIdTimeDesc(busId)
-                .stream()
-                .findFirst()
-                .orElse(null);
-    }*/
-
 
     public BusPosition getLatestPosition(Long busId) {
         return busPositionRepository.findByIdBusIdOrderByIdTimeDesc(busId)
@@ -221,18 +159,7 @@ public class BusPositionService {
                 .orElse(null);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
+}
 
 
 
@@ -277,9 +204,66 @@ public class BusPositionService {
         return positions.isEmpty() ? null : positions.get(0);
     }*/
 
+// Get latest position of a bus
+    /*public BusPosition getLatestPosition(Long busId) {
+        return busPositionRepository.findByBusIdOrderByIdTimeDesc(busId)
+                .stream()
+                .findFirst()
+                .orElse(null);
+    }*/
 
 
 
 
-}
+    /*public Stop nearestStop(double latitude, double longitude, Stop destination) {
+        if (destination == null || destination.getItinerary() == null) {
+            return null; // pas d'itinéraire disponible
+        }
+
+        List<Itinerary> itineraries = destination.getItinerary();
+        Stop nearest = null;
+        double minDistance = Double.MAX_VALUE;
+
+        for (Itinerary itinerary : itineraries) {
+            if (itinerary.getStop() == null) continue; // éviter NullPointerException
+            for (Stop stop : itinerary.getStop()) {
+                double distance = haversine(latitude, longitude, stop.getLatitude(), stop.getLongitude());
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearest = stop;
+                }
+            }
+        }
+
+        return nearest;
+    }*/
+
+
+
+
+    /*public void savePosition(Long busId, double longitude, double latitude, long time) {
+        Point point = geometryFactory.createPoint(new Coordinate(longitude, latitude));
+        BusPosition position = new BusPosition();
+        //position.setBusId(busId);
+        position.setPosition(point);
+        position.setSavedAt(Instant.now());
+
+        position.setTime(time);
+
+        position.setBus(busService.getBus(busId));
+        busPosRepo.save(position);
+    }*/
+
+
+    /*public Stop nearestStop(double latitude, double longitude, Stop destination){
+        if (destination == null || destination.getItinerary() == null) return null;
+
+        return destination.getItinerary().stream()
+                .filter(it -> it.getStop() != null)
+                .flatMap(it -> it.getStop().stream())
+                .min(Comparator.comparingDouble(stop -> haversine(latitude, longitude, stop.getLatitude(), stop.getLongitude())))
+                .orElse(null);
+    }*/
+
+
 

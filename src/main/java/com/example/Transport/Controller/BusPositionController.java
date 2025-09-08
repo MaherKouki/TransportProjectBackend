@@ -46,11 +46,6 @@ public class BusPositionController {
 
 
 
-
-
-
-
-
     //http://localhost:8080/busPosition/nearest?latitude=36.84&longitude=10.20&destinationId=2
     @GetMapping("/nearest")
     public ResponseEntity<Stop> getNearestStop(
@@ -99,25 +94,6 @@ public class BusPositionController {
 
 
 
-    /*@PostMapping("/locationn")
-    public ResponseEntity<String> receiveLocationn(@RequestBody Map<String, Object> payload) {
-        try {
-            Long busId = ((Number) payload.get("busId")).longValue();
-            Double latitude = ((Number) payload.get("lat")).doubleValue();
-            Double longitude = ((Number) payload.get("lon")).doubleValue();
-            Long timestamp = payload.get("time") != null ? ((Number) payload.get("time")).longValue() : null;
-
-            busPositionService.saveBusPosition(busId, latitude, longitude, timestamp);
-            return ResponseEntity.ok("Location received");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Invalid payload");
-        }
-    }*/
-
-
-
-
     @PostMapping("/savePosition")
     public BusPosition saveBusPosition(
             @RequestParam Long busId,
@@ -158,18 +134,6 @@ public class BusPositionController {
 
 
 
-
-    /*@GetMapping("/lastPosition/{idBus}")
-    public ResponseEntity<?> getLastPosition(@PathVariable Long idBus) {
-
-        if (!busPosRepo.existsById_BusId(idBus)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body("Bus " + idBus + " does not exits ");
-        }
-        BusPosition position = busPosRepo.findLastPosition(idBus).get(0);
-        return ResponseEntity.ok(position);
-    }*/
-
     @GetMapping("/lastPosition/{idBus}")
     public ResponseEntity<Object> getLastPosition(@PathVariable Long idBus) {
         if (!busPosRepo.existsById_BusId(idBus)) {
@@ -190,25 +154,6 @@ public class BusPositionController {
 
 
     //todo: receive the location from the phone
-
-    /*@PostMapping("/location")
-    public ResponseEntity<String> receiveLocation(@RequestBody Map<String, Object> payload) {
-        try {
-            // Extract fields safely
-            Long busId = ((Number) payload.get("busId")).longValue();
-            Double latitude = ((Number) payload.get("lat")).doubleValue();
-            Double longitude = ((Number) payload.get("lon")).doubleValue();
-            Long timestamp = payload.get("time") != null ? ((Number) payload.get("time")).longValue() : null;
-
-            // Save in DB
-            busPositionService.saveBusPosition(busId, latitude, longitude, timestamp);
-
-            return ResponseEntity.ok("Location received");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Invalid payload");
-        }
-    }*/
 
     // Update or add a new bus position manually
     @PostMapping("/update")
@@ -235,11 +180,11 @@ public class BusPositionController {
     }
 
 
+}
 
 
 
-
-    // Allow any device
+// Allow any device
     /*@PostMapping("/owntracks")
     public ResponseEntity<String> receiveOwnTracksLocation(@RequestBody Map<String, Object> payload) {
         try {
@@ -267,12 +212,54 @@ public class BusPositionController {
 
 
 
+    /*@GetMapping("/lastPosition/{idBus}")
+    public ResponseEntity<?> getLastPosition(@PathVariable Long idBus) {
+
+        if (!busPosRepo.existsById_BusId(idBus)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body("Bus " + idBus + " does not exits ");
+        }
+        BusPosition position = busPosRepo.findLastPosition(idBus).get(0);
+        return ResponseEntity.ok(position);
+    }*/
+
+
+    /*@PostMapping("/location")
+    public ResponseEntity<String> receiveLocation(@RequestBody Map<String, Object> payload) {
+        try {
+            // Extract fields safely
+            Long busId = ((Number) payload.get("busId")).longValue();
+            Double latitude = ((Number) payload.get("lat")).doubleValue();
+            Double longitude = ((Number) payload.get("lon")).doubleValue();
+            Long timestamp = payload.get("time") != null ? ((Number) payload.get("time")).longValue() : null;
+
+            // Save in DB
+            busPositionService.saveBusPosition(busId, latitude, longitude, timestamp);
+
+            return ResponseEntity.ok("Location received");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Invalid payload");
+        }
+    }*/
 
 
 
+    /*@PostMapping("/locationn")
+    public ResponseEntity<String> receiveLocationn(@RequestBody Map<String, Object> payload) {
+        try {
+            Long busId = ((Number) payload.get("busId")).longValue();
+            Double latitude = ((Number) payload.get("lat")).doubleValue();
+            Double longitude = ((Number) payload.get("lon")).doubleValue();
+            Long timestamp = payload.get("time") != null ? ((Number) payload.get("time")).longValue() : null;
 
-
-
+            busPositionService.saveBusPosition(busId, latitude, longitude, timestamp);
+            return ResponseEntity.ok("Location received");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Invalid payload");
+        }
+    }*/
 
 
 
@@ -323,7 +310,4 @@ public class BusPositionController {
 
 
 
-
-
-}
 

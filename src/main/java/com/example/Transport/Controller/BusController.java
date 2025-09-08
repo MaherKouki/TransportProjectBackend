@@ -14,8 +14,6 @@ import java.util.List;
 @RequestMapping("/bus")
 public class BusController {
 
-
-
     private final BusService busService;
     //BusService busService;
 
@@ -48,9 +46,5 @@ public class BusController {
         busService.affectItineraryToBus(idItinerary, idBus);
         return ResponseEntity.ok("Itineraaary " + idItinerary + " assigned to Bus " + idBus);
     }
-
-
-
-
 
 }

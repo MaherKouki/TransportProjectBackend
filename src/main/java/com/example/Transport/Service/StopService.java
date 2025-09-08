@@ -18,7 +18,6 @@ public class StopService {
     public final StopRepo stopRepo;
 
 
-
     public List<Stop> saveStops(List<Stop> stops){
         AtomicInteger index = new AtomicInteger(0);
 
@@ -35,6 +34,13 @@ public class StopService {
                     stop.setEstimatedTime(original.getEstimatedTime());
                     return stopRepo.save(stop);
                 }) .collect(Collectors.toList());
+
+
+    }
+}
+
+
+
 
 
         /*int index = 1;
@@ -55,6 +61,3 @@ public class StopService {
         }
         return savedStops;*/
 
-
-    }
-}
