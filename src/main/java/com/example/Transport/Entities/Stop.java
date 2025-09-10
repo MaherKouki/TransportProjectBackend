@@ -2,6 +2,7 @@ package com.example.Transport.Entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -35,6 +36,7 @@ public class Stop {
     /*@ManyToOne
     private Itinerary itinerary;*/
 
+    //@JsonIgnore
     @JsonIgnore
     @ManyToMany(mappedBy = "stops")
     private List<Itinerary> itineraries = new ArrayList<>();

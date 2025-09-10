@@ -12,15 +12,11 @@ import java.util.Objects;
 @Data
 public class BusPositionId {
 
-
     private Long busId;
     private long time;
-
     public BusPositionId() {}
-
     public BusPositionId(Long busId, long time) {
         this.busId = busId;
         this.time = time;
     }
-
 }

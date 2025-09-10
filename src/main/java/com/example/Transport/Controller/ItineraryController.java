@@ -100,6 +100,17 @@ public class ItineraryController {
     }
 
 
+    @DeleteMapping("/deleteItinerary/{id}")
+    public ResponseEntity<String> deleteItinerary(@PathVariable("id") int id) {
+        try {
+            itineraryService.deleteItinerary(id);
+            return ResponseEntity.ok("Itinerary deleted successfully");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
+
 
 
     @PostMapping("/add-stops/{idItinerary}")

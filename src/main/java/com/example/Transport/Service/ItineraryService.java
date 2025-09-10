@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,6 +24,39 @@ public class ItineraryService {
     private final BusRepository busRepository;
 
 
+    public String cleanText(String input) {
+        if (input == null) return null;
+
+        // 1. Normalize and remove diacritics (accents)
+        String noAccents = Normalizer.normalize(input, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+
+        // 2. Remove non-ASCII characters
+        String asciiOnly = noAccents.replaceAll("[^\\p{ASCII}]", "");
+
+        // 3. Trim spaces
+        return asciiOnly.trim();
+    }
+
+
+    @Transactional
+    public void deleteItinerary(int itineraryId) {
+        Itinerary itinerary = itineraryRepo.findById(itineraryId)
+                .orElseThrow(() -> new RuntimeException("Itinerary not found"));
+
+        // Remove stops association
+        for (Stop stop : itinerary.getStops()) {
+            stop.getItineraries().remove(itinerary); // optional if bi-directional
+        }
+        itinerary.getStops().clear();
+
+        // Remove buses association
+        itinerary.getBuses().clear();
+
+        // Delete itinerary
+        itineraryRepo.delete(itinerary);
+    }
+
 
 
     @Transactional
@@ -35,9 +69,13 @@ public class ItineraryService {
         Stop savedDeparture = saveOrGetStop(departure);
         Stop savedDestination = saveOrGetStop(destination);
 
+        //Bech netjaneb les problemes mte3 l'accent wl3arbi
+        String nameItinerary = savedDeparture.getStopName() + " - " + savedDestination.getStopName();
+
+
         // Create itinerary without stops yet
         Itinerary itinerary = new Itinerary();
-        itinerary.setItineraryName(savedDeparture.getStopName() + " - " + savedDestination.getStopName());
+        itinerary.setItineraryName(cleanText(nameItinerary));
         itinerary.setStartTime(savedDeparture.getArrivalTime());
         itinerary.setDeparture(savedDeparture);
         itinerary.setDestination(savedDestination);
@@ -126,10 +164,10 @@ public class ItineraryService {
     }
 
 
-    @Transactional
+    /*@Transactional
     public void deleteItinerary(int id) {
         itineraryRepo.deleteById(id);
-    }
+    }*/
 
 
     private Stop saveOrGetStop(Stop stop) {

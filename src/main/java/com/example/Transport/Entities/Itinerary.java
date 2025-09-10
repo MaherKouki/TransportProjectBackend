@@ -1,8 +1,10 @@
 package com.example.Transport.Entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -47,6 +49,7 @@ public class Itinerary {
             joinColumns = @JoinColumn(name = "itinerary_id"),
             inverseJoinColumns = @JoinColumn(name = "stop_id")
     )
+    //@JsonBackReference
     private List<Stop> stops = new ArrayList<>();
 
 

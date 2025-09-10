@@ -35,5 +35,6 @@ public class Bus {
 
 
         @ManyToMany(mappedBy = "buses")
+        @JsonIgnore
         private List<Itinerary> itineraries = new ArrayList<>();
 }
