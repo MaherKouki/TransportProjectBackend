@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/stops")
 @RequiredArgsConstructor
@@ -32,6 +34,10 @@ public class StopController {
         }
     }
 
+    @GetMapping("/allStops")
+    public List<Stop> getAllStops() {
+        return stopRepo.findAll();
+    }
 
 
 }
