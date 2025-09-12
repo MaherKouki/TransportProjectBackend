@@ -1,10 +1,13 @@
 package com.example.Transport.Service;
 
 
+import com.example.Transport.Entities.Itinerary;
 import com.example.Transport.Entities.Stop;
+import com.example.Transport.Repositories.ItineraryRepo;
 import com.example.Transport.Repositories.StopRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +19,7 @@ import java.util.stream.Collectors;
 public class StopService {
 
     public final StopRepo stopRepo;
+    public final ItineraryRepo itineraryRepo;
 
 
     public List<Stop> saveStops(List<Stop> stops){
@@ -37,6 +41,23 @@ public class StopService {
 
 
     }
+
+
+
+    public void deleteStop(int stopId) {
+
+        Stop stop = stopRepo.findById(stopId).
+                orElseThrow(() -> new RuntimeException("Stop not found"));
+        if (stop.getItineraries() != null) {
+            for(Itinerary itinerary : stop.getItineraries()) {
+                itinerary.getStops().remove(stop);
+                itineraryRepo.save(itinerary);
+            }
+        }
+        stopRepo.delete(stop);
+
+    }
+
 }
 
 
