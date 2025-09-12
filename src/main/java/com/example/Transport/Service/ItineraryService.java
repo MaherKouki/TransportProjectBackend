@@ -119,6 +119,9 @@ public class ItineraryService {
                 .orElse(0) + 1;
 
         for (Stop stop : stops) {
+
+            // bech clean the name
+            stop.setStopName(cleanText(stop.getStopName()));
             // Save or get the stop globally (may exist in other itineraries)
             Stop savedStop = saveOrGetStop(stop);
 

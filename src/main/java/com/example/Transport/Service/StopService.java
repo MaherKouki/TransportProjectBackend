@@ -39,13 +39,11 @@ public class StopService {
                     return stopRepo.save(stop);
                 }) .collect(Collectors.toList());
 
-
     }
 
 
 
     public void deleteStop(int stopId) {
-
         Stop stop = stopRepo.findById(stopId).
                 orElseThrow(() -> new RuntimeException("Stop not found"));
         if (stop.getItineraries() != null) {

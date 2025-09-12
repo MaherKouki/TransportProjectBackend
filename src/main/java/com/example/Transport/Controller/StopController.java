@@ -15,8 +15,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StopController {
 
-    StopRepo stopRepo;
-    StopService stopService;
+    private final StopRepo stopRepo;
+    private final StopService stopService;
 
     @PostMapping("/stop")
     public ResponseEntity<Stop> createStop(@RequestBody Stop stop) {
