@@ -11,6 +11,9 @@ import java.util.Optional;
 
 public interface ItineraryRepo extends JpaRepository<Itinerary, Integer> {
 
+    boolean existsByDeparture(Stop stop);
+    boolean existsByDestination(Stop stop);
+
     /*@Query("""
     SELECT i from Itinerary i
     where i.departure.stopName = :stopPoint

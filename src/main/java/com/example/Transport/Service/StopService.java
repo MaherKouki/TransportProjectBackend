@@ -21,6 +21,8 @@ public class StopService {
     public final StopRepo stopRepo;
     public final ItineraryRepo itineraryRepo;
 
+    //public final ItineraryRepo itineraryRepo;
+
 
     public List<Stop> saveStops(List<Stop> stops){
         AtomicInteger index = new AtomicInteger(0);
@@ -43,7 +45,7 @@ public class StopService {
 
 
 
-    public void deleteStop(int stopId) {
+    /*public void deleteStop(int stopId) {
         Stop stop = stopRepo.findById(stopId).
                 orElseThrow(() -> new RuntimeException("Stop not found"));
         if (stop.getItineraries() != null) {
@@ -54,7 +56,56 @@ public class StopService {
         }
         stopRepo.delete(stop);
 
+    }*/
+
+
+    @Transactional
+    public void deleteStop(int stopId) {
+        Stop stop = stopRepo.findById(stopId)
+                .orElseThrow(() -> new RuntimeException("Stop not found"));
+
+        // 1. Check if stop is used as departure
+        boolean isDeparture = itineraryRepo.existsByDeparture(stop);
+
+        // 2. Check if stop is used as destination
+        boolean isDestination = itineraryRepo.existsByDestination(stop);
+
+        if (isDeparture || isDestination) {
+            throw new RuntimeException("Stop is used as a departure or destination and cannot be deleted");
+        }
+
+        // 3. If it's only in many-to-many (intermediate stops), remove relationship
+        for (Itinerary itinerary : stop.getItineraries()) {
+            itinerary.getStops().remove(stop);  // remove link
+        }
+
+        // 4. Now delete the stop
+        stopRepo.delete(stop);
     }
+
+
+
+
+    /*@Transactional
+    public void deleteStop(int stopId) {
+        Stop stop = stopRepo.findById(stopId)
+                .orElseThrow(() -> new RuntimeException("Stop not found"));
+
+        // Remove stop from all itineraries
+        if (stop.getItineraries() != null) {
+            for (Itinerary itinerary : stop.getItineraries()) {
+                itinerary.getStops().remove(stop);
+                // optionally save the itinerary if cascade is not set
+                // itineraryRepo.save(itinerary);
+            }
+        }
+
+        stop.getItineraries().clear();
+
+        // Delete stop
+        stopRepo.delete(stop);
+    }*/
+
 
 }
 
