@@ -22,7 +22,7 @@ public class StopController {
         return ResponseEntity.ok(savedStop);
     }
 
-    @DeleteMapping("/stops/{id}")
+    @DeleteMapping("/deleteStop/{id}")
     public ResponseEntity<String> deleteStop(@PathVariable int id) {
         try {
             stopService.deleteStop(id);
@@ -31,5 +31,7 @@ public class StopController {
             return ResponseEntity.status(404).body(e.getMessage());
         }
     }
+
+
 
 }
