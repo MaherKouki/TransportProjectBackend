@@ -83,29 +83,19 @@ public class StopService {
         stopRepo.delete(stop);
     }
 
-
-
-
-    /*@Transactional
-    public void deleteStop(int stopId) {
-        Stop stop = stopRepo.findById(stopId)
+    public Stop updateStop(int id, Stop stopDetails) {
+        Stop stop = stopRepo.findById(id)
                 .orElseThrow(() -> new RuntimeException("Stop not found"));
 
-        // Remove stop from all itineraries
-        if (stop.getItineraries() != null) {
-            for (Itinerary itinerary : stop.getItineraries()) {
-                itinerary.getStops().remove(stop);
-                // optionally save the itinerary if cascade is not set
-                // itineraryRepo.save(itinerary);
-            }
-        }
+        stop.setStopName(stopDetails.getStopName());
+        stop.setArrivalTime(stopDetails.getArrivalTime());
+        stop.setEstimatedTime(stopDetails.getEstimatedTime());
+        stop.setLatitude(stopDetails.getLatitude());
+        stop.setLongitude(stopDetails.getLongitude());
+        stop.setOrderIndex(stopDetails.getOrderIndex());
 
-        stop.getItineraries().clear();
-
-        // Delete stop
-        stopRepo.delete(stop);
-    }*/
-
+        return stopRepo.save(stop);
+    }
 
 }
 

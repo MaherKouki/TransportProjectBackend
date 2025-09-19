@@ -40,4 +40,11 @@ public class StopController {
     }
 
 
+    @PutMapping("/updateStop/{id}")
+    public ResponseEntity<Stop> updateStop(@PathVariable int id, @RequestBody Stop stopDetails) {
+        return ResponseEntity.ok(stopService.updateStop(id, stopDetails));
+    }
+
+
+
 }
