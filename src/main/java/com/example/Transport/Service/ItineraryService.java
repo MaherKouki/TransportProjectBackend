@@ -59,7 +59,7 @@ public class ItineraryService {
 
 
 
-    @Transactional
+    /*@Transactional
     public Itinerary createItineraryFromMarkers(Stop departure, Stop destination) {
         if (departure == null || destination == null) {
             throw new IllegalArgumentException("Both departure and destination stops are required.");
@@ -99,9 +99,105 @@ public class ItineraryService {
         }
 
         return itineraryRepo.save(itinerary);
-    }
+    }*/
+
 
     @Transactional
+    public Itinerary createItineraryFromMarkers(Stop departure, Stop destination) {
+        if (departure == null || destination == null) {
+            throw new IllegalArgumentException("Both departure and destination stops are required.");
+        }
+
+        // Save or get stops globally (stopName will be cleaned inside saveOrGetStop)
+        Stop savedDeparture = saveOrGetStop(departure);
+        Stop savedDestination = saveOrGetStop(destination);
+
+        // Build itinerary name from already cleaned stop names
+        String nameItinerary = savedDeparture.getStopName() + " - " + savedDestination.getStopName();
+
+        // Create itinerary without stops yet
+        Itinerary itinerary = new Itinerary();
+        itinerary.setItineraryName(nameItinerary);
+        itinerary.setStartTime(savedDeparture.getArrivalTime());
+        itinerary.setDeparture(savedDeparture);
+        itinerary.setDestination(savedDestination);
+
+        // Save itinerary first to generate ID
+        itinerary = itineraryRepo.save(itinerary);
+
+        // Add stops to itinerary
+        List<Stop> stops = new ArrayList<>();
+        stops.add(savedDeparture);
+        stops.add(savedDestination);
+        itinerary.setStops(stops);
+
+        // Synchronize Many-to-Many from stop side
+        for (Stop stop : stops) {
+            if (stop.getItineraries() == null) stop.setItineraries(new ArrayList<>());
+            if (!stop.getItineraries().contains(itinerary)) {
+                stop.getItineraries().add(itinerary);
+                stopRepo.save(stop);
+            }
+        }
+
+        return itineraryRepo.save(itinerary);
+    }
+
+
+    @Transactional
+    public void addStopsToItinerary(int idItinerary, List<Stop> stops) {
+        // Fetch itinerary
+        Itinerary itinerary = itineraryRepo.findById(idItinerary)
+                .orElseThrow(() -> new IllegalArgumentException("Itinerary not found"));
+
+        if (itinerary.getStops() == null) {
+            itinerary.setStops(new ArrayList<>());
+        }
+
+        // Determine starting orderIndex
+        int orderIndex = itinerary.getStops().stream()
+                .map(Stop::getOrderIndex)
+                .filter(Objects::nonNull)
+                .max(Integer::compare)
+                .orElse(0) + 1;
+
+        for (Stop stop : stops) {
+            // Save or get the stop globally (stopName is cleaned inside saveOrGetStop)
+            Stop savedStop = saveOrGetStop(stop);
+
+            // Check if this stop already exists in THIS itinerary
+            boolean alreadyInItinerary = itinerary.getStops().stream()
+                    .anyMatch(s ->
+                            s.getLatitude() == savedStop.getLatitude() &&
+                                    s.getLongitude() == savedStop.getLongitude() &&
+                                    s.getStopName().equals(savedStop.getStopName())
+                    );
+
+            if (!alreadyInItinerary) {
+                // Set orderIndex
+                savedStop.setOrderIndex(orderIndex++);
+                stopRepo.save(savedStop);
+
+                // Add stop to itinerary
+                itinerary.getStops().add(savedStop);
+
+                // Synchronize Many-to-Many from stop side
+                if (savedStop.getItineraries() == null) savedStop.setItineraries(new ArrayList<>());
+                if (!savedStop.getItineraries().contains(itinerary)) {
+                    savedStop.getItineraries().add(itinerary);
+                    stopRepo.save(savedStop);
+                }
+            }
+        }
+
+        itineraryRepo.save(itinerary);
+    }
+
+
+
+
+
+    /*@Transactional
     public void addStopsToItinerary(int idItinerary, List<Stop> stops) {
         // Fetch itinerary
         Itinerary itinerary = itineraryRepo.findById(idItinerary)
@@ -151,7 +247,7 @@ public class ItineraryService {
         }
 
         itineraryRepo.save(itinerary);
-    }
+    }*/
 
 
 
@@ -173,9 +269,46 @@ public class ItineraryService {
     }*/
 
 
-    private Stop saveOrGetStop(Stop stop) {
+
+
+
+    /*private Stop saveOrGetStop(Stop stop) {
         return stopRepo.findByStopNameAndLatitudeAndLongitude(
                 stop.getStopName(), stop.getLatitude(), stop.getLongitude()
         ).orElseGet(() -> stopRepo.save(stop));
+    }*/
+    private Stop saveOrGetStop(Stop stop) {
+        // Always clean the name before any DB operation
+        stop.setStopName(cleanText(stop.getStopName()));
+
+        Optional<Stop> existingStopOpt = stopRepo.findByStopNameAndLatitudeAndLongitude(
+                stop.getStopName(), stop.getLatitude(), stop.getLongitude()
+        );
+
+        if (existingStopOpt.isPresent()) {
+            // Return the existing stop (name already clean)
+            return existingStopOpt.get();
+        } else {
+            // Save new stop with cleaned name
+            return stopRepo.save(stop);
+        }
     }
+
+
+
+
+
+    @Transactional
+    public Itinerary updateItinerary(int id, Itinerary updatedItinerary) {
+        Itinerary itinerary = itineraryRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Itinerary not found"));
+
+        itinerary.setItineraryName(updatedItinerary.getItineraryName());
+        itinerary.setStartTime(updatedItinerary.getStartTime());
+        itinerary.setDeparture(updatedItinerary.getDeparture());
+        itinerary.setDestination(updatedItinerary.getDestination());
+
+        return itineraryRepo.save(itinerary);
+    }
+
 }

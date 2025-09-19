@@ -129,6 +129,14 @@ public class ItineraryController {
     }
 
 
+    @PutMapping("/updateItinerary/{id}")
+    public ResponseEntity<Itinerary> updateItinerary(
+            @PathVariable int id,
+            @RequestBody Itinerary updatedItinerary) {
+        Itinerary itinerary = itineraryService.updateItinerary(id, updatedItinerary);
+        return ResponseEntity.ok(itinerary);
+    }
+
 
 
 
