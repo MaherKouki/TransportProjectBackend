@@ -11,6 +11,7 @@ import com.example.Transport.Service.BusPositionService;
 import com.example.Transport.Service.BusService;
 import com.example.Transport.Service.StopService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Position;
@@ -30,6 +31,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/busPosition")
+@Slf4j
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")  // autorise uniquement Angular local
 public class BusPositionController {
@@ -83,14 +85,19 @@ public class BusPositionController {
             @PathVariable Long busId,
             @PathVariable int stopId) {
 
+        // Add debug logging
+        System.out.println("Received busId: " + busId + ", stopId: " + stopId);
+
         try {
             double distance = busPositionService.calculateDistanceBusToStop(busId, stopId);
             return ResponseEntity.ok(distance);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build(); // or return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null)
+            // Add detailed error logging
+            System.err.println("Error calculating distance: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
         }
     }
-
 
 
 
