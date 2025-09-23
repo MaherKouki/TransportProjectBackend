@@ -185,13 +185,21 @@ public class BusPositionController {
     }
 
 
-    /*@PostMapping("disaffectBusFromItinerary/{idBus}/{idItinerary}")
-    public ResponseEntity<BusPosition> disaffectBusFromItinerary(Long idBus , int idItinerary) {
+    //Busssss  Itinerary
+    @PostMapping("desaffectBusFromItinerary/{idBus}/{idItinerary}")
+    public ResponseEntity<String> disaffectBusFromItinerary(Long idBus , int idItinerary) {
         Itinerary itinerary = itineraryRepo.findById(idItinerary)
                 .orElseThrow(() -> new RuntimeException("Itinerary not found"));
+        Bus bus = busRepository.findById(idBus)
+                .orElseThrow(() -> new RuntimeException("Bus not found"));
 
-        for(itinerary )
-    }*/
+        itinerary.getBuses().remove(bus);
+        bus.getItineraries().remove(itinerary);
+
+        itineraryRepo.save(itinerary);
+        busRepository.save(bus);
+        return ResponseEntity.ok("bus" + bus.getIdBus() + "désaffecter de l'itineraire" + itinerary.getIdItinerary() );
+    }
 
 
 }
