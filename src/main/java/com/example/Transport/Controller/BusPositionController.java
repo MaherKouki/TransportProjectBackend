@@ -1,11 +1,9 @@
 package com.example.Transport.Controller;
 
-import com.example.Transport.Entities.Bus;
-import com.example.Transport.Entities.BusPosition;
-import com.example.Transport.Entities.BusPositionId;
-import com.example.Transport.Entities.Stop;
+import com.example.Transport.Entities.*;
 import com.example.Transport.Repositories.BusPositionRepository;
 import com.example.Transport.Repositories.BusRepository;
+import com.example.Transport.Repositories.ItineraryRepo;
 import com.example.Transport.Repositories.StopRepo;
 import com.example.Transport.Service.BusPositionService;
 import com.example.Transport.Service.BusService;
@@ -45,7 +43,7 @@ public class BusPositionController {
     private final GeometryFactory geometryFactory = new GeometryFactory();
     private final BusRepository busRepository;
     private final BusPositionRepository busPositionRepository;
-
+    private final ItineraryRepo itineraryRepo;
 
 
     //http://localhost:8080/busPosition/nearest?latitude=36.84&longitude=10.20&destinationId=2
@@ -185,6 +183,15 @@ public class BusPositionController {
         if (position == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(position);
     }
+
+
+    /*@PostMapping("disaffectBusFromItinerary/{idBus}/{idItinerary}")
+    public ResponseEntity<BusPosition> disaffectBusFromItinerary(Long idBus , int idItinerary) {
+        Itinerary itinerary = itineraryRepo.findById(idItinerary)
+                .orElseThrow(() -> new RuntimeException("Itinerary not found"));
+
+        for(itinerary )
+    }*/
 
 
 }
