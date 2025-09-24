@@ -187,7 +187,7 @@ public class BusPositionController {
 
     //Busssss  Itinerary
     @PostMapping("desaffectBusFromItinerary/{idBus}/{idItinerary}")
-    public ResponseEntity<String> disaffectBusFromItinerary(Long idBus , int idItinerary) {
+    public ResponseEntity<String> disaffectBusFromItinerary(@PathVariable Long idBus ,@PathVariable int idItinerary) {
         Itinerary itinerary = itineraryRepo.findById(idItinerary)
                 .orElseThrow(() -> new RuntimeException("Itinerary not found"));
         Bus bus = busRepository.findById(idBus)
