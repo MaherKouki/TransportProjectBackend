@@ -29,7 +29,7 @@ public class StopService {
 
         return stops.stream()
                 .map(original -> {
-                    Stop stop = new Stop();
+                    Stop stop=new Stop();
                     stop.setStopName(original.getStopName());
                     stop.setLatitude(original.getLatitude());
                     stop.setLongitude(original.getLongitude());
