@@ -30,8 +30,13 @@ public class Bus {
         private String marque;
 
         @JsonIgnore
-        @OneToMany (mappedBy = "bus")
-        Set<BusPosition> busPosition = new HashSet<>();
+        /*@OneToMany (mappedBy = "bus")
+        Set<BusPosition> busPosition = new HashSet<>();*/
+
+        @OneToMany(mappedBy = "bus", cascade = CascadeType.ALL, orphanRemoval = true)
+        private List<BusPosition> busPosition;
+
+
 
 
         @ManyToMany(mappedBy = "buses")

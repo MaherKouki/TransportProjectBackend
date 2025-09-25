@@ -143,7 +143,7 @@ public class ItineraryService {
         return itineraryRepo.save(itinerary);
     }
 
-
+/*
     @Transactional
     public void addStopsToItinerary(int idItinerary, List<Stop> stops) {
         // Fetch itinerary
@@ -188,6 +188,56 @@ public class ItineraryService {
                     stopRepo.save(savedStop);
                 }
             }
+        }
+
+        itineraryRepo.save(itinerary);
+    }*/
+
+
+    @Transactional
+    public void addStopsToItinerary(int idItinerary, List<Stop> stopsToAdd) {
+        Itinerary itinerary = itineraryRepo.findById(idItinerary)
+                .orElseThrow(() -> new IllegalArgumentException("Itinerary not found"));
+
+        if (itinerary.getStops() == null) {
+            itinerary.setStops(new ArrayList<>());
+        }
+
+        // Remove destination temporarily
+        Stop destination = itinerary.getDestination();
+        itinerary.getStops().remove(destination);
+
+        // Sort existing stops (except destination) by orderIndex
+        itinerary.getStops().sort((a, b) -> a.getOrderIndex() - b.getOrderIndex());
+
+        // Add new stops
+        for (Stop stop : stopsToAdd) {
+            Stop savedStop = saveOrGetStop(stop);
+
+            // Avoid duplicates
+            boolean alreadyInItinerary = itinerary.getStops().stream()
+                    .anyMatch(s -> s.getLatitude() == savedStop.getLatitude() &&
+                            s.getLongitude() == savedStop.getLongitude() &&
+                            s.getStopName().equals(savedStop.getStopName()));
+            if (!alreadyInItinerary) {
+                itinerary.getStops().add(savedStop);
+
+                // Sync Many-to-Many
+                if (savedStop.getItineraries() == null) savedStop.setItineraries(new ArrayList<>());
+                if (!savedStop.getItineraries().contains(itinerary)) {
+                    savedStop.getItineraries().add(itinerary);
+                    stopRepo.save(savedStop);
+                }
+            }
+        }
+
+        // Add destination back
+        itinerary.getStops().add(destination);
+
+        // Recalculate orderIndex for all stops
+        for (int i = 0; i < itinerary.getStops().size(); i++) {
+            itinerary.getStops().get(i).setOrderIndex(i);
+            stopRepo.save(itinerary.getStops().get(i));
         }
 
         itineraryRepo.save(itinerary);

@@ -202,6 +202,12 @@ public class BusPositionController {
     }
 
 
+    //http://localhost:8080/busPosition/deleteBusPosition/1
+    @DeleteMapping("/deleteBusPosition/{busId}")
+    public ResponseEntity<Void> deleteBusPositions(@PathVariable Long busId) {
+        busPositionService.deleteBusPositionsOfBus(busId);
+        return ResponseEntity.noContent().build();
+    }
 
 
 

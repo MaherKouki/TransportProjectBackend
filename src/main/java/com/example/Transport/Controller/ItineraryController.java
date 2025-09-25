@@ -90,9 +90,6 @@ public class ItineraryController {
 
 
 
-
-
-
     @GetMapping("/getAllItineraries")
     public ResponseEntity<List<Itinerary>> getAllItineraries() {
         List<Itinerary> itineraries = itineraryRepo.findAll();
@@ -136,14 +133,6 @@ public class ItineraryController {
         Itinerary itinerary = itineraryService.updateItinerary(id, updatedItinerary);
         return ResponseEntity.ok(itinerary);
     }
-
-
-
-
-
-
-
-
 
 }
 

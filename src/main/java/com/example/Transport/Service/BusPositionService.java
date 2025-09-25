@@ -159,6 +159,26 @@ public class BusPositionService {
                 .orElse(null);
     }
 
+
+    /*public void deleteBusPositionsOfBus(Long busId) {
+        Bus bus = busRepo.findById(busId)
+                .orElseThrow(() -> new RuntimeException("Bus not found"));
+
+        for(BusPosition busPosition : bus.getBusPosition()){
+            if(busPosition.getBusId().equals(busId))
+                busPositionRepository.delete(busPosition);
+        }
+    }*/
+
+    public void deleteBusPositionsOfBus(Long busId) {
+        Bus bus = busRepo.findById(busId)
+                .orElseThrow(() -> new RuntimeException("Bus not found"));
+
+        bus.getBusPosition().clear(); // clears all positions
+        busRepo.save(bus); // JPA will delete them automatically
+    }
+
+
 }
 
 
