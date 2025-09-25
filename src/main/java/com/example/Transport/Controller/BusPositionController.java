@@ -40,6 +40,7 @@ public class BusPositionController {
     private final StopService stopService;
     private final StopRepo stopRepo;
 
+
     private final GeometryFactory geometryFactory = new GeometryFactory();
     private final BusRepository busRepository;
     private final BusPositionRepository busPositionRepository;
