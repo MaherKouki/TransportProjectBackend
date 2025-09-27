@@ -27,8 +27,32 @@ public class BusService implements IBusService{
 
     @Override
     public void deleteBus(Long IdBus) {
-        busRepo.deleteById(IdBus);
+
+
+        Bus bus = busRepo.findById(IdBus)
+                .orElseThrow(()-> new RuntimeException("Bus not found"));
+
+        for (Itinerary itinerary : bus.getItineraries()) {
+            itinerary.getBuses().remove(bus);
+            itineraryRepo.save(itinerary);
+        }
+        busRepo.delete(bus);
     }
+
+
+
+    public Bus updateBus(Long idBus, Bus updatedBus) {
+        Bus existingBus = busRepo.findById(idBus)
+                .orElseThrow(() -> new RuntimeException("Bus not found"));
+
+        // Update fields
+        existingBus.setMatricule(updatedBus.getMatricule());
+        existingBus.setMarque(updatedBus.getMarque());
+
+        // Save and return
+        return busRepo.save(existingBus);
+    }
+
 
     @Override
     public Bus getBus(Long IdBus) {
@@ -52,5 +76,7 @@ public class BusService implements IBusService{
         itinerary.getBuses().add(bus);
         itineraryRepo.save(itinerary);
     }
+
+
 
 }

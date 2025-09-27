@@ -4,6 +4,7 @@ package com.example.Transport.Controller;
 import com.example.Transport.Entities.Bus;
 import com.example.Transport.Service.BusService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,8 +35,17 @@ public class BusController {
     }
 
     @DeleteMapping("/removeBus/{busId}")
-    public void deleteBus(@PathVariable("busId") Long busId) {
+    public ResponseEntity<Void> deleteBus(@PathVariable("busId") Long busId) {
         busService.deleteBus(busId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/updateBus/{busId}")
+    public ResponseEntity<Bus> updateBus(
+            @PathVariable Long busId,
+            @RequestBody Bus busDetails) {
+        Bus updatedBus = busService.updateBus(busId, busDetails);
+        return ResponseEntity.ok(updatedBus);
     }
 
 
@@ -46,5 +56,10 @@ public class BusController {
         busService.affectItineraryToBus(idItinerary, idBus);
         return ResponseEntity.ok("Itineraaary " + idItinerary + " assigned to Bus " + idBus);
     }
+
+
+
+
+
 
 }
