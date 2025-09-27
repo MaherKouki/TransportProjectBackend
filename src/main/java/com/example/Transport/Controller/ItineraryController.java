@@ -134,6 +134,16 @@ public class ItineraryController {
         return ResponseEntity.ok(itinerary);
     }
 
+
+    @GetMapping("/getItineraryById/{idItinerary}")
+    public ResponseEntity<Itinerary> getItineraryById(@PathVariable int idItinerary) {
+        Itinerary itinerary = itineraryRepo.findById(idItinerary)
+                .orElseThrow(() -> new RuntimeException("Itinerary not found"));
+        return ResponseEntity.ok(itinerary);
+    }
+
+
+
 }
 
 /*
