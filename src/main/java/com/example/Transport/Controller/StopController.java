@@ -40,9 +40,27 @@ public class StopController {
     }
 
 
-    @PutMapping("/updateStop/{id}")
+    /*@PutMapping("/updateStop/{id}")
     public ResponseEntity<Stop> updateStop(@PathVariable int id, @RequestBody Stop stopDetails) {
         return ResponseEntity.ok(stopService.updateStop(id, stopDetails));
+    }*/
+
+
+    @PutMapping("/updateStop/{id}")
+    public ResponseEntity<?> updateStop(
+            @PathVariable int id,
+            @RequestBody Stop stopRequest
+    ) {
+        Stop stop = stopRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Stop not found"));
+
+        // Update only the fields you want
+        stop.setStopName(stopRequest.getStopName());
+        stop.setOrderIndex(stopRequest.getOrderIndex());
+        stop.setEstimatedTime(stopRequest.getEstimatedTime());
+
+        stopRepo.save(stop);
+        return ResponseEntity.ok(stop);
     }
 
 
