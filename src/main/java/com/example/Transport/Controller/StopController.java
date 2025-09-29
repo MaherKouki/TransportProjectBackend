@@ -64,5 +64,13 @@ public class StopController {
     }
 
 
+    @GetMapping("/getStopById/{id}")
+    public ResponseEntity<Stop> getStopById(@PathVariable int id) {
+        Stop stop = stopRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Stop not found with id: " + id));
+        return ResponseEntity.ok(stop);
+    }
+
+
 
 }
