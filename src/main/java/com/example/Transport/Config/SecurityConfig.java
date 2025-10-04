@@ -47,6 +47,23 @@ public class SecurityConfig {
                         .requestMatchers("/bus-positions/savePosition").hasRole("DRIVER")
                         .requestMatchers("/bus-positions/position/**").hasRole("DRIVER")
 
+
+                        .requestMatchers(
+                                "/itineraries/getAllItineraries",
+                                "/itineraries/getItineraryBy**",
+                                "/itineraries/getStopByItinerary/**",
+                                "/itineraries/getItineraryById/**",
+                                "/stops/allStops",
+                                "/stops/getStopById/**",
+                                "/bus/getAllBuses",
+                                "/buses/getBusById/**",
+
+                                "/busPosition/nearest",
+                                "/busPosition/nearest-time",
+                                "/busPosition/lastPosition/**",
+                                "/busPosition/**/distance-to-stop/**"
+                        ).hasAnyRole("USER")
+
                         // User can view data
                         .requestMatchers(
                                 "/itineraries/getAllItineraries",
