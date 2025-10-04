@@ -48,6 +48,7 @@ public class BusPositionController {
 
 
     //http://localhost:8080/busPosition/nearest?latitude=36.84&longitude=10.20&destinationId=2
+    //USER
     @GetMapping("/nearest")
     public ResponseEntity<Stop> getNearestStop(
             @RequestParam double latitude,
@@ -67,6 +68,7 @@ public class BusPositionController {
 
 
 
+    //USER
     @GetMapping("/nearest-time")
     public ResponseEntity<Long> getTravelTimeToNearestStop(
             @RequestParam double latitude,
@@ -79,6 +81,7 @@ public class BusPositionController {
         return ResponseEntity.ok(travelTime.toMinutes());
     }
 
+    //USER
     @GetMapping("/{busId}/distance-to-stop/{stopId}")
     public ResponseEntity<Double> getDistanceBusToStop(
             @PathVariable Long busId,
@@ -118,7 +121,7 @@ public class BusPositionController {
     public ResponseEntity<?> updatePosition(@PathVariable Long busId,
                                             @RequestBody BusPosition busPosition) {
         try {
-            long time = busPosition.getTimestamp(); // from deserialized JSON
+            long time = busPosition.getTimestamp(); // Mndeserialized JSON
 
             BusPositionId id = new BusPositionId(busId, time);
             if (busPosRepo.existsById(id)) {
